@@ -69,6 +69,8 @@ public class ExtraOpModeFunctions
     public CRServo intake;
     public DcMotorEx arm;
     public TouchSensor elevatorLimit;
+    public Servo tail;
+    public Servo dumper;
 
     public RevColorSensorV3 colorSensor;
     public ColorRangeSensor testColorSensor;
@@ -87,21 +89,21 @@ public class ExtraOpModeFunctions
         fs = fieldSide;
 
         intake = hardwareMap.get(CRServo.class, "intake");
-        arm = hardwareMap.get(DcMotorEx.class, "arm");
+        intake.setDirection(CRServo.Direction.FORWARD);
+        intake.setPower(0);
 
+        tail = hardwareMap.get(Servo.class, "tail");
+
+        dumper = hardwareMap.get(Servo.class, "dumper");
+
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
         arm.setDirection(DcMotorEx.Direction.FORWARD);
         arm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm.setTargetPosition(0);
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
-
         elevator = hardwareMap.get(DcMotorEx.class, "elevator");
-
-        localLop = lop;
-
-        intake.setDirection(CRServo.Direction.FORWARD);
-        intake.setPower(0);
 
 
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(10.0, 0.05, 0.0, 0.0);
@@ -286,6 +288,16 @@ public class ExtraOpModeFunctions
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
         elevator.setPower(speed);
+    }
+
+    public void tailUp()
+    {
+        tail.setPosition(5);
+    }
+
+    public void tailDown()
+    {
+        tail.setPosition(1);
     }
 
     public boolean armMoving = false;

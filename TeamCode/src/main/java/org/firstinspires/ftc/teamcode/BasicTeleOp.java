@@ -39,6 +39,8 @@ public class BasicTeleOp extends LinearOpMode
         double adjustedAngle;
         double speedMultiplier;
 
+        boolean gp2_left_trigger_pressed = false;
+        boolean gp2_left_bumper_pressed = false;
         boolean gp2_dpad_left_pressed = false;
         boolean gp2_dpad_right_pressed = false;
         boolean gp2_dpad_up_pressed = false;
@@ -329,7 +331,25 @@ public class BasicTeleOp extends LinearOpMode
                 extras.intakeOff();
             }
 
-            //extras.setLeds(getRuntime());
+            if (gamepad2.left_bumper)
+            {
+                gp2_left_bumper_pressed = true;
+            }
+            else if (!gamepad2.left_bumper && gp2_left_bumper_pressed) {
+                gp2_left_bumper_pressed = false;
+                extras.tailUp();
+            }
+
+            if (gamepad2.left_trigger > 0)
+            {
+                gp2_left_trigger_pressed = true;
+            }
+            else if ((gamepad2.left_trigger == 0) && gp2_left_trigger_pressed) {
+                gp2_left_trigger_pressed = false;
+                extras.tailDown();
+            }
+
+                //extras.setLeds(getRuntime());
 
             telemetry.addData("step", extras.step);
             //telemetry.addData("x", drive.pose.position.x);

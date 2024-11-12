@@ -48,7 +48,7 @@ public class ExtraOpModeFunctions
     long capReqTime;
 
 
-    public enum ElevatorPosition {COLLECT,HOVER,ONE,TWO, THREE, FOUR, FIVE, PURPLE}
+    public enum ElevatorPosition {COLLECT, GROUND, LOW, MIDDLE, HIGH, TWO, THREE, FOUR, FIVE}
     public ElevatorPosition elevatorPosition = ElevatorPosition.COLLECT;
     public enum ElbowPosition {EXTEND, RETRACT, PURPLE}
     public ElbowPosition elbowPosition = ElbowPosition.RETRACT;
@@ -71,6 +71,7 @@ public class ExtraOpModeFunctions
     public TouchSensor elevatorLimit;
     public Servo tail;
     public Servo dumper;
+
 
     public RevColorSensorV3 colorSensor;
     public ColorRangeSensor testColorSensor;
@@ -194,6 +195,20 @@ public class ExtraOpModeFunctions
         arm.setTargetPosition(target);
         arm.setPower(1.0);
     }
+
+    public void otherElevatorTest()
+    {
+        arm.setPower(0.1);
+    }
+    public void elevatorTest()
+    {
+        arm.setPower(-0.1);
+    }
+    public void elevatorOff()
+    {
+        arm.setPower(0);
+    }
+
     public void armOff() {
         arm.setPower(0);
     }
@@ -212,82 +227,59 @@ public class ExtraOpModeFunctions
 
 
 
-    public void elevatorCollect()
+    public void elevatorGround()
     {
         target = 0;
         elevatorPosition = elevatorPosition.COLLECT;
-        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
-        elevator.setPower(0.5);
-    }
 
-    public void elevatorHover()
-    {
-        target = elevatorHoverPos;
-        elevatorPosition = elevatorPosition.HOVER;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
+
         elevator.setPower(1.0);
     }
 
-    public void elevatorHalf()
+    public void elevatorJunction()
     {
-        target = 210;
-        elevatorPosition = elevatorPosition.HOVER;
+        target = 20;
+        elevatorPosition = elevatorPosition.GROUND;
+
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
+
         elevator.setPower(1.0);
     }
 
-    public void elevatorOne(double speed)
+    public void elevatorLow()
     {
-        target = 400;
-        elevatorPosition = elevatorPosition.ONE;
+        target = 1210;
+        elevatorPosition = elevatorPosition.LOW;
+
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
-        elevator.setPower(speed);
+
+        elevator.setPower(1.0);
     }
 
-    public void elevatorTwo(double speed)
+    public void elevatorMiddle()
     {
-        target = 800;
-        elevatorPosition = elevatorPosition.TWO;
+        target = 2020;
+        elevatorPosition = elevatorPosition.MIDDLE;
+
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
-        elevator.setPower(speed);
-    }
-    public void elevatorThree(double speed)
-    {
-        target = 1200;
-        elevatorPosition = elevatorPosition.THREE;
-        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
-        elevator.setPower(speed);
-    }
-    public void elevatorFour(double speed)
-    {
-        target = 1600;
-        elevatorPosition = elevatorPosition.FOUR;
-        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
-        elevator.setPower(speed);
-    }
-    public void elevatorFive(double speed)
-    {
-        target = 2000;
-        elevatorPosition = elevatorPosition.FIVE;
-        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
-        elevator.setPower(speed);
+
+        elevator.setPower(1.0);
     }
 
-    public void elevatorPurple(double speed)
+    public void elevatorHigh()
     {
-        target = 75;
-        elevatorPosition = elevatorPosition.PURPLE;
+        target = 2820;
+        elevatorPosition = elevatorPosition.HIGH;
+
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
-        elevator.setPower(speed);
+
+        elevator.setPower(1.0);
     }
 
     public void tailUp()

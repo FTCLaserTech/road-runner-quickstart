@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -126,8 +127,8 @@ public class BasicTeleOp extends LinearOpMode
 
             //adjustedAngle = 0;
             //adjustedAngle = extras.adjustAngleForDriverPosition(drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), ExtraOpModeFunctions.RobotStartPosition.STRAIGHT);
-            extras.odo.update();
-            adjustedAngle = extras.odo.getHeading() + (Math.PI / 2);
+            drive.odo.update();
+            adjustedAngle = drive.odo.getHeading() + (Math.PI / 2);
 
 
             stickSideways = gamepad1.left_stick_x * speedMultiplier;
@@ -185,10 +186,109 @@ public class BasicTeleOp extends LinearOpMode
                     break;
             }
 
+
+            slope = -elevMultMin / elevHeightMax;
+            elevatorEncoderCounts = (extras.elevator.getCurrentPosition());
+            elevMult = slope * elevatorEncoderCounts + 1;
+
+            if (gamepad1.right_bumper)
+            {
+                speedMultiplier = 0.6 * elevMult;
+            }
+            else if (gamepad1.left_bumper)
+            {
+                speedMultiplier = 0.4 * elevMult;
+            }
+            else
+            {
+                speedMultiplier = 0.75 * elevMult;
+            }
+
+            // MANUAL ELEVATOR CONTROL- gamepad 2
+            // stop if the limit switch is pressed
+
+            float elevatorStick = gamepad2.left_stick_y;
+            if(extras.elevatorLimit.isPressed())
+            {
+                extras.elevator.setPower(0);
+                elevatorStopped = true;
+
+                // it's OK to move up if the limit switch is pressed
+                if(elevatorStick < 0)
+                {
+                    extras.elevator.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                    extras.elevator.setPower(-elevatorStick);
+                    elevatorStopped = false;
+                }
+                else if (gamepad2.right_stick_y < 0)
+                {
+                    extras.elevatorHigh();
+                }
+
+            }
+            // don't go above the max height
+            else if((extras.elevator.getCurrentPosition() > elevHeightMax) && (elevatorStick < 0))
+            {
+                extras.elevator.setPower(0);
+                elevatorStopped = true;
+
+                int elevPos1 = extras.elevator.getCurrentPosition();
+                extras.elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                extras.elevator.setTargetPosition(elevPos1);
+                extras.elevator.setPower(1.0);
+            }
+
+            else
+            {
+                // If stick is not moved, only set power to 0 once
+                if((elevatorStick == 0) && !elevatorStopped)
+                {
+                    extras.elevator.setPower(0);
+                    elevatorStopped = true;
+
+                    int elevPos1 = extras.elevator.getCurrentPosition();
+                    extras.elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    extras.elevator.setTargetPosition(elevPos1);
+                    extras.elevator.setPower(1.0);
+
+                }
+                else if (elevatorStick != 0)
+                {
+                    extras.elevator.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+                    extras.elevator.setPower(-elevatorStick);
+                    elevatorStopped = false;
+                }
+            }
+
+            // Elevator to top with right stick up
+            if (gamepad2.right_stick_y < 0)
+            {
+                extras.elevatorHigh();
+            }
+
+            // Elevator to bottom with right sitck down
+            if ((gamepad2.right_stick_y > 0))
+            {
+                extras.elevatorGround();
+            }
+
             drive.updatePoseEstimate();
 
+            if (gamepad2.dpad_down)
+            {
+                extras.otherElevatorTest();
+            }
+            else if (gamepad2.dpad_up)
+            {
+                extras.elevatorTest();
+            }
+            else
+            {
+                extras.elevatorOff();
+            }
+
             // Manual elevator movements with the left analog stick on the second gamepad (gamepad2) - added by JB
-            float elevatorStick = gamepad2.left_stick_y;
+            //float elevatorStick = gamepad2.left_stick_y;
             /*
             if (extras.elevatorLimit.isPressed() && (elevatorStick > 0))
             {
@@ -357,7 +457,7 @@ public class BasicTeleOp extends LinearOpMode
             //telemetry.addData("heading", drive.pose.heading.real);
             telemetry.addData("IMU angle", adjustedAngle);
 
-            Pose2D pos = extras.odo.getPosition();
+            Pose2D pos = drive.odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
 
             telemetry.addData("Position", data);

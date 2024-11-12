@@ -449,6 +449,26 @@ public class BasicTeleOp extends LinearOpMode
                 extras.tailDown();
             }
 
+            if(gamepad2.dpad_right)
+            {
+            gp2_dpad_right_pressed = true;
+            }
+            else if (!gamepad2.dpad_right && gp2_dpad_right_pressed) {
+                gp2_dpad_right_pressed = false;
+                extras.sampleDump();
+            }
+
+            if (gamepad2.dpad_left)
+            {
+                gp2_dpad_left_pressed = true;
+            }
+            else if ((gamepad2.dpad_left) && gp2_dpad_left_pressed) {
+                gp2_dpad_left_pressed = false;
+                extras.samplePickup();
+
+            }
+
+
                 //extras.setLeds(getRuntime());
 
             telemetry.addData("step", extras.step);

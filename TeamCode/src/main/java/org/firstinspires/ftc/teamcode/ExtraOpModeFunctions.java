@@ -292,6 +292,16 @@ public class ExtraOpModeFunctions
         tail.setPosition(1);
     }
 
+    public void sampleDump()
+        {
+        dumper.setPosition(0.5);
+    }
+
+    public void samplePickup()
+    {
+        dumper.setPosition(0);
+    }
+
     public boolean armMoving = false;
     public int step = 0;
 

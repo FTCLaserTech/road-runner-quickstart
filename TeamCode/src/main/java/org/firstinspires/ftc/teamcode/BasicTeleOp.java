@@ -79,6 +79,7 @@ public class BasicTeleOp extends LinearOpMode
         double stickRotation;
 
         double currentAmps;
+        double currentAmps1;
         double currentAmpsRight;
         double maxAmps = 0;
         int numDangerAmps = 0;
@@ -117,6 +118,32 @@ public class BasicTeleOp extends LinearOpMode
             {
                 numDangerAmps = 0;
             }
+
+            currentAmps1 = extras.arm.getCurrent(CurrentUnit.AMPS);
+
+            if (currentAmps1 > maxAmps)
+            {
+                maxAmps = currentAmps;
+            }
+
+            if (currentAmps1 >= 7)
+            {
+                numDangerAmps += 1;
+
+                telemetry.addLine("WARNING: HIGH AMPS");
+
+                if(numDangerAmps >= 10)
+                {
+                    // in future, ONLY stop arm motion
+                    stop();
+                }
+            }
+            else
+            {
+                numDangerAmps = 0;
+            }
+
+
 
             if (gamepad1.right_bumper)
                 speedMultiplier = 0.6;

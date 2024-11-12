@@ -142,7 +142,6 @@ public final class MecanumDrive {
             rightBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightBack));
             rightFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightFront));
 
-            imu = lazyImu.get();
 
             // TODO: reverse encoders if needed
             //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -155,6 +154,7 @@ public final class MecanumDrive {
             PositionVelocityPair rightBackPosVel = rightBack.getPositionAndVelocity();
             PositionVelocityPair rightFrontPosVel = rightFront.getPositionAndVelocity();
 
+            imu = lazyImu.get();
             YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
 
             FlightRecorder.write("MECANUM_LOCALIZER_INPUTS", new MecanumLocalizerInputsMessage(
@@ -211,7 +211,10 @@ public final class MecanumDrive {
             );
         }
     }
-
+    public MecanumDrive(HardwareMap hardwareMap, Pose2d pose)
+    {
+        this(hardwareMap, pose, null);
+    }
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose, LinearOpMode lom) {
         this.pose = pose;
         this.lom = lom;
@@ -279,10 +282,15 @@ public final class MecanumDrive {
         rightBack.setPower(wheelVels.rightBack.get(0) / maxPowerMag);
         rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
 
-        lom.telemetry.addData("Pin point Heading", odo.getHeading());
-        lom.telemetry.addData("IMU Heading", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
-        lom.telemetry.addData("Pin pointVelocity", odo.getHeadingVelocity());
-        lom.telemetry.addData("IMU Velocity", imu.getRobotAngularVelocity(AngleUnit.RADIANS));
+        /*
+        if(lom != null) {
+            imu = lazyImu.get();
+            lom.telemetry.addData("Pin point Heading", odo.getHeading());
+            lom.telemetry.addData("IMU Heading", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+            lom.telemetry.addData("Pin pointVelocity", odo.getHeadingVelocity());
+            lom.telemetry.addData("IMU Velocity", imu.getRobotAngularVelocity(AngleUnit.RADIANS));
+        }
+         */
     }
 
     public final class FollowTrajectoryAction implements Action {

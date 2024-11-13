@@ -108,7 +108,7 @@ public class ExtraOpModeFunctions
 
 
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(10.0, 0.05, 0.0, 0.0);
-        elevator.setDirection(DcMotorEx.Direction.FORWARD);
+        elevator.setDirection(DcMotorEx.Direction.REVERSE);
         elevator.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         elevator.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         elevator.setTargetPosition(0);
@@ -198,15 +198,21 @@ public class ExtraOpModeFunctions
 
     public void otherElevatorTest()
     {
-        arm.setPower(0.1);
+        target = 100;
+        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        elevator.setTargetPosition(target);
+        elevator.setPower(1.0);
     }
     public void elevatorTest()
     {
-        arm.setPower(-0.1);
+        target = 2500;
+        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        elevator.setTargetPosition(target);
+        elevator.setPower(1.0);
     }
     public void elevatorOff()
     {
-        arm.setPower(0);
+        elevator.setPower(0);
     }
 
     public void armOff() {
@@ -284,7 +290,7 @@ public class ExtraOpModeFunctions
 
     public void tailUp()
     {
-        tail.setPosition(5);
+        tail.setPosition(-1);
     }
 
     public void tailDown()
@@ -294,12 +300,12 @@ public class ExtraOpModeFunctions
 
     public void sampleDump()
         {
-        dumper.setPosition(0.5);
+        dumper.setPosition(1.0);
     }
 
     public void samplePickup()
     {
-        dumper.setPosition(0);
+        dumper.setPosition(-1.0);
     }
 
     public boolean armMoving = false;

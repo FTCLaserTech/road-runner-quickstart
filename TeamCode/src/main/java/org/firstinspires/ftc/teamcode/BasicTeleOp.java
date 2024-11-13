@@ -235,6 +235,7 @@ public class BasicTeleOp extends LinearOpMode
             // stop if the limit switch is pressed
 
             float elevatorStick = gamepad2.left_stick_y;
+            /*
             if(extras.elevatorLimit.isPressed())
             {
                 extras.elevator.setPower(0);
@@ -286,7 +287,7 @@ public class BasicTeleOp extends LinearOpMode
                     elevatorStopped = false;
                 }
             }
-
+            */
             // Elevator to top with right stick up
             if (gamepad2.right_stick_y < 0)
             {
@@ -304,14 +305,16 @@ public class BasicTeleOp extends LinearOpMode
             if (gamepad2.dpad_down)
             {
                 extras.otherElevatorTest();
+                telemetry.addData("Dpad down", extras.elevator.getTargetPosition());
+                telemetry.addData("Dpad down", extras.elevator.getPower());
+
             }
-            else if (gamepad2.dpad_up)
+
+            if (gamepad2.dpad_up)
             {
                 extras.elevatorTest();
-            }
-            else
-            {
-                extras.elevatorOff();
+                telemetry.addData("Dpad up", extras.elevator.getTargetPosition());
+                telemetry.addData("Dpad up", extras.elevator.getPower());
             }
 
             // Manual elevator movements with the left analog stick on the second gamepad (gamepad2) - added by JB
@@ -358,7 +361,7 @@ public class BasicTeleOp extends LinearOpMode
                 elevatorStopped = true;
             }
              */
-
+            /*
             // reset the elevator if the limit switch is pressed
             if(extras.elevatorLimit.isPressed() && elevatorResetOK)
             {
@@ -392,7 +395,7 @@ public class BasicTeleOp extends LinearOpMode
                 //extras.elevatorRight.setPower(1.0);
                 //elevatorStopped = false;
             }
-
+            */
             /*
             // RESET IMU
             if ((gamepad1.back) && (gamepad1.b))
@@ -489,7 +492,7 @@ public class BasicTeleOp extends LinearOpMode
             {
                 gp2_dpad_left_pressed = true;
             }
-            else if ((gamepad2.dpad_left) && gp2_dpad_left_pressed) {
+            else if ((!gamepad2.dpad_left) && gp2_dpad_left_pressed) {
                 gp2_dpad_left_pressed = false;
                 extras.samplePickup();
 
@@ -511,6 +514,7 @@ public class BasicTeleOp extends LinearOpMode
             telemetry.addLine();
             telemetry.addData("Arm Counts", extras.arm.getCurrentPosition());
             telemetry.addData("Elevator encoder counts: ", extras.elevator.getCurrentPosition());
+            telemetry.addData("Elevator target counts: ", extras.elevator.getTargetPosition());
             telemetry.addData("Elevator current: ", currentAmps);
             telemetry.addData("Max amps: ", maxAmps);
             telemetry.addData("Elevator limit: ", extras.elevatorLimit.isPressed());

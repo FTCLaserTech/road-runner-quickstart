@@ -181,7 +181,8 @@ public class ExtraOpModeFunctions
     {
         intake.setPower(0);
     }
-
+    
+    /*
     public void armExtend()
     {
         target = 1500;
@@ -195,6 +196,23 @@ public class ExtraOpModeFunctions
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(target);
         arm.setPower(1.0);
+    }
+    */
+
+    public void armExtend()
+    {
+        arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        arm.setPower(0.2);
+    }
+    public void armRetract()
+    {
+        arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        arm.setPower(-0.2);
+    }
+    public void armStop()
+    {
+        arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        arm.setPower(0.0);
     }
 
     public void otherElevatorTest()

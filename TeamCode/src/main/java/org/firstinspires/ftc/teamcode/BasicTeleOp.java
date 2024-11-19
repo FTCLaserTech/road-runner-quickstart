@@ -366,6 +366,10 @@ public class BasicTeleOp extends LinearOpMode
             {
                 extras.armRetract();
             }
+            else
+            {
+                extras.armStop();
+            }
 
             if (gamepad2.right_bumper)
             {

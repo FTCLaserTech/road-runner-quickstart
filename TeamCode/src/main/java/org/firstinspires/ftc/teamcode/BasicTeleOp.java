@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
-@TeleOp(group = "a")
+@TeleOp(group = "A")
 public class BasicTeleOp extends LinearOpMode
 {
     @Override
@@ -317,85 +317,6 @@ public class BasicTeleOp extends LinearOpMode
                 telemetry.addData("Dpad up", extras.elevator.getPower());
             }
 
-            // Manual elevator movements with the left analog stick on the second gamepad (gamepad2) - added by JB
-            //float elevatorStick = gamepad2.left_stick_y;
-            /*
-            if (extras.elevatorLimit.isPressed() && (elevatorStick > 0))
-            {
-                //stops the elevator if the limit switch is pressed
-                if(false)
-                {
-                    extras.elevatorLeft.setPower(0);
-                    extras.elevatorRight.setPower(0);
-                    elevatorStopped = true;
-                    manualStickMove = false;
-                    extras.elevatorLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-                    extras.elevatorLeft.setTargetPosition(0);
-                    extras.elevatorLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                    extras.elevatorRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-                    extras.elevatorRight.setTargetPosition(0);
-                    extras.elevatorRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                }
-            }
-            else if (elevatorStick != 0)
-            {
-                //moves the elevator with the left joystick
-                extras.elevatorLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-                extras.elevatorRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-                extras.elevatorLeft.setPower(-elevatorStick*0.2);
-                extras.elevatorRight.setPower(-elevatorStick*0.2);
-                elevatorStopped = false;
-                manualStickMove = true;
-            }
-            //This condition should only be called once. When we loop back through the IF statement, no condition should be true on the second round (should we do nothing)
-            else if (manualStickMove && (elevatorStick == 0))
-            {
-                //Only executes when we stop moving the stick
-                extras.elevatorLeft.setTargetPosition(extras.elevatorLeft.getCurrentPosition());
-                extras.elevatorRight.setTargetPosition(extras.elevatorRight.getCurrentPosition());
-                extras.elevatorLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                extras.elevatorRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                extras.elevatorLeft.setPower(100);
-                extras.elevatorRight.setPower(100);
-                manualStickMove = false;
-                elevatorStopped = true;
-            }
-             */
-            /*
-            // reset the elevator if the limit switch is pressed
-            if(extras.elevatorLimit.isPressed() && elevatorResetOK)
-            {
-                elevatorResetOK = false;
-
-                // only do it if both encoders are not close to 0
-                if( (Math.abs(extras.elevator.getCurrentPosition()) > 4) )
-                {
-                    extras.elevator.setPower(0.0);
-                    //extras.armState = ExtraOpModeFunctions.ArmState.POSITIONIN;
-                    extras.elevator.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-                    extras.elevator.setTargetPosition(0);
-                }
-            }
-            else if (!extras.elevatorLimit.isPressed())
-            {
-                elevatorResetOK = true;
-            }
-
-
-            if ((elevatorStick > 0) && !extras.elevatorLimit.isPressed())
-            {
-                extras.elevator.setTargetPosition(extras.elevator.getTargetPosition() - 10);
-                //extras.elevatorLeft.setPower(1.0);
-                //extras.elevatorRight.setPower(1.0);
-            }
-            else if (elevatorStick < 0)
-            {
-                extras.elevator.setTargetPosition(extras.elevator.getTargetPosition() + 10);
-                //extras.elevatorLeft.setPower(1.0);
-                //extras.elevatorRight.setPower(1.0);
-                //elevatorStopped = false;
-            }
-            */
             /*
             // RESET IMU
             if ((gamepad1.back) && (gamepad1.b))

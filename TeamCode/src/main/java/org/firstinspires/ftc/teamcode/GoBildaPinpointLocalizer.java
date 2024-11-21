@@ -56,6 +56,7 @@ public final class GoBildaPinpointLocalizer implements Localizer {
     public Twist2dDual<Time> update() {
         // PositionVelocityPair parPosVel = par.getPositionAndVelocity(); // units are ticks, ticks/sec, ticks, ticks/sec
         // PositionVelocityPair perpPosVel = perp.getPositionAndVelocity();
+        odo.update();
         PositionVelocityPair parPosVel = new PositionVelocityPair(odo.getEncoderX(), (int)(odo.getVelX()/ mmPerTick), odo.getEncoderX(), (int)(odo.getVelX()/ mmPerTick));
         PositionVelocityPair perpPosVel =  new PositionVelocityPair(odo.getEncoderY(), (int)(odo.getVelY()/ mmPerTick), odo.getEncoderY(), (int)(odo.getVelY()/ mmPerTick));
 

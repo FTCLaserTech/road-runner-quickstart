@@ -260,8 +260,8 @@ public final class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        //localizer = new DriveLocalizer();
-        localizer = new GoBildaPinpointLocalizer(hardwareMap, odo);
+        localizer = new DriveLocalizer();
+        //localizer = new GoBildaPinpointLocalizer(hardwareMap, odo);
 
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
@@ -282,15 +282,15 @@ public final class MecanumDrive {
         rightBack.setPower(wheelVels.rightBack.get(0) / maxPowerMag);
         rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
 
-        /*
+
         if(lom != null) {
             imu = lazyImu.get();
             lom.telemetry.addData("Pin point Heading", odo.getHeading());
-            lom.telemetry.addData("IMU Heading", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+            lom.telemetry.addData("IMU Heading", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
             lom.telemetry.addData("Pin pointVelocity", odo.getHeadingVelocity());
-            lom.telemetry.addData("IMU Velocity", imu.getRobotAngularVelocity(AngleUnit.RADIANS));
+            lom.telemetry.addData("IMU Velocity", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
         }
-         */
+
     }
 
     public final class FollowTrajectoryAction implements Action {
@@ -479,9 +479,9 @@ public final class MecanumDrive {
     public PoseVelocity2d updatePoseEstimate() {
 
         Twist2dDual<Time> twist = localizer.update();
-        pose = pose.plus(twist.value());
+        //pose = pose.plus(twist.value());
 
-        //pose = new Pose2d(new Vector2d(odo.getPosX(), odo.getPosY()), Rotation2d.exp(odo.getHeading()));
+        pose = new Pose2d(new Vector2d(odo.getPosX(), odo.getPosY()), Rotation2d.exp(odo.getHeading()+ (Math.PI / 2)));
 
         poseHistory.add(pose);
         while (poseHistory.size() > 100) {

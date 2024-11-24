@@ -3,12 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
@@ -145,10 +141,8 @@ public class BasicTeleOp extends LinearOpMode
 
 
 
-            if (gamepad1.right_bumper)
-                speedMultiplier = 0.6;
-            else if (gamepad1.left_bumper)
-                speedMultiplier = 0.4;
+            if (gamepad1.left_bumper)
+                speedMultiplier = 0.5;
             else
                 speedMultiplier = 1.0;
 
@@ -218,18 +212,6 @@ public class BasicTeleOp extends LinearOpMode
             elevatorEncoderCounts = (extras.elevator.getCurrentPosition());
             elevMult = slope * elevatorEncoderCounts + 1;
 
-            if (gamepad1.right_bumper)
-            {
-                speedMultiplier = 0.6 * elevMult;
-            }
-            else if (gamepad1.left_bumper)
-            {
-                speedMultiplier = 0.4 * elevMult;
-            }
-            else
-            {
-                speedMultiplier = 0.75 * elevMult;
-            }
 
             // MANUAL ELEVATOR CONTROL- gamepad 2
             // stop if the limit switch is pressed
@@ -289,6 +271,7 @@ public class BasicTeleOp extends LinearOpMode
             }
             */
             // Elevator to top with right stick up
+            /*
             if (gamepad2.right_stick_y < 0)
             {
                 extras.elevatorHigh();
@@ -299,20 +282,38 @@ public class BasicTeleOp extends LinearOpMode
             {
                 extras.elevatorGround();
             }
-
+            */
             drive.updatePoseEstimate();
 
-            if (gamepad2.dpad_down)
+            if (gamepad2.a)
             {
-                extras.otherElevatorTest();
+                extras.elevatorDown();
+                extras.armHorizontal();
+                extras.tailUp();
+                telemetry.addData("Dpad down", extras.elevator.getTargetPosition());
+                telemetry.addData("Dpad down", extras.elevator.getPower());
+
+            }
+            /*
+            if (gamepad2.y)
+            {
+                extras.elevatorHighBasket();
+                telemetry.addData("Dpad up", extras.elevator.getTargetPosition());
+                telemetry.addData("Dpad up", extras.elevator.getPower());
+            }
+            */
+
+            if (gamepad2.dpad_up)
+            {
+                extras.elevatorDown();
                 telemetry.addData("Dpad down", extras.elevator.getTargetPosition());
                 telemetry.addData("Dpad down", extras.elevator.getPower());
 
             }
 
-            if (gamepad2.dpad_up)
+            if (gamepad2.dpad_down)
             {
-                extras.elevatorTest();
+                extras.elevatorHighBar();
                 telemetry.addData("Dpad up", extras.elevator.getTargetPosition());
                 telemetry.addData("Dpad up", extras.elevator.getPower());
             }
@@ -357,6 +358,7 @@ public class BasicTeleOp extends LinearOpMode
             }
             */
             //extend arm
+            /*
             if (gamepad2.y)
             {
                 extras.armExtend();
@@ -366,17 +368,19 @@ public class BasicTeleOp extends LinearOpMode
             {
                 extras.armRetract();
             }
-            else
+            else if (gamepad2.b)
             {
-                extras.armStop();
+                extras.armHorizontal();
             }
+             */
 
-            if (gamepad2.right_bumper)
+
+            if (gamepad1.left_trigger > 0)
             {
                 extras.intakeReverse();
                 intakeOn = true;
             }
-            else if (gamepad2.right_trigger > 0)
+            else if (gamepad1.right_trigger > 0)
             {
                 extras.intakeForward();
                 intakeOn = true;
@@ -404,25 +408,54 @@ public class BasicTeleOp extends LinearOpMode
                 extras.tailDown();
             }
 
-            if(gamepad2.dpad_right)
+
+
+            if(gamepad2.y)
             {
-            gp2_dpad_right_pressed = true;
+                gp2_y_pressed = true;
             }
-            else if (!gamepad2.dpad_right && gp2_dpad_right_pressed) {
-                gp2_dpad_right_pressed = false;
-                extras.sampleDump();
+            else if (!gamepad2.y && gp2_y_pressed) {
+                gp2_y_pressed = false;
+                if(extras.basketDeliveryState == ExtraOpModeFunctions.BasketDelivery.IDLE)
+                {
+                    extras.basketDeliveryState = ExtraOpModeFunctions.BasketDelivery.ARMUP;
+                }
+
             }
 
-            if (gamepad2.dpad_left)
+            extras.basketDeliveryStateMachine();
+
+            if(gamepad2.x)
             {
-                gp2_dpad_left_pressed = true;
+                gp2_x_pressed = true;
             }
-            else if ((!gamepad2.dpad_left) && gp2_dpad_left_pressed) {
-                gp2_dpad_left_pressed = false;
-                extras.samplePickup();
+            else if (!gamepad2.x && gp2_x_pressed) {
+                gp2_x_pressed = false;
+                if(extras.dumpState == ExtraOpModeFunctions.Collect.IDLE)
+                {
+                    extras.dumpState = ExtraOpModeFunctions.Collect.DUMP;
+                }
 
             }
 
+            extras.collectStateMachine();
+
+            if(gamepad1.a)
+            {
+                gp1_a_pressed = true;
+            }
+            else if (!gamepad1.a && gp1_a_pressed) {
+                gp1_a_pressed = false;
+                if(extras.armPosition == ExtraOpModeFunctions.ArmPosition.EXTEND)
+                {
+                    extras.armHorizontal();
+                }
+                else if (extras.armPosition == ExtraOpModeFunctions.ArmPosition.HORIZONTAL)
+                {
+                    extras.armExtend();
+                }
+
+            }
 
                 //extras.setLeds(getRuntime());
 
@@ -430,7 +463,8 @@ public class BasicTeleOp extends LinearOpMode
             //telemetry.addData("x", drive.pose.position.x);
             //telemetry.addData("y", drive.pose.position.y);
             //telemetry.addData("heading", drive.pose.heading.real);
-            telemetry.addData("IMU angle", adjustedAngle);
+            telemetry.addData("ODO angle", adjustedAngle);
+            //telemetry.addData("IMU angle", drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
 
             Pose2D pos = drive.odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));

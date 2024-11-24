@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 //import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
+import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+
 import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -13,10 +15,10 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -84,6 +86,13 @@ public class ExtraOpModeFunctions
     public HardwareMap hm = null;
     public LinearOpMode lop = null;
 
+    public enum BasketDelivery {IDLE, ARMUP, WAIT1, INTAKEOUT, WAIT2, INTAKEOFF}
+    BasketDelivery basketDeliveryState = BasketDelivery.IDLE;
+
+    public enum Collect {IDLE, DUMP, WAIT, COLLECT}
+    Collect dumpState = Collect.IDLE;
+
+
     public ExtraOpModeFunctions(HardwareMap hardwareMap, LinearOpMode linearOpMode, FieldSide fieldSide)
     {
         hm = hardwareMap;
@@ -121,6 +130,68 @@ public class ExtraOpModeFunctions
         pattern = RevBlinkinLedDriver.BlinkinPattern.CP1_2_BEATS_PER_MINUTE;
         blinkinLedDriver.setPattern(pattern);
     }
+
+    ElapsedTime basketDeliveryStateTimer = new ElapsedTime(MILLISECONDS);
+    public void basketDeliveryStateMachine() {
+        switch (basketDeliveryState) {
+            case IDLE:
+                //do nothing
+                break;
+            case ARMUP:
+                armRetract();
+                intakeForward();
+                tailDown();
+                basketDeliveryStateTimer.reset();
+                basketDeliveryState = BasketDelivery.WAIT1;
+                break;
+            case WAIT1:
+                if (basketDeliveryStateTimer.milliseconds() > 1000) {
+                    basketDeliveryState = BasketDelivery.INTAKEOUT;
+                }
+                break;
+            case INTAKEOUT:
+                intakeReverse();
+                basketDeliveryStateTimer.reset();
+                basketDeliveryState = BasketDelivery.WAIT2;
+                break;
+            case WAIT2:
+                if (basketDeliveryStateTimer.milliseconds() > 1000) {
+                    basketDeliveryState = BasketDelivery.INTAKEOFF;
+                }
+                break;
+            case INTAKEOFF:
+                intakeOff();
+                elevatorHighBasket();
+                basketDeliveryState = BasketDelivery.IDLE;
+                break;
+
+        }
+    }
+
+    ElapsedTime dumpStateTimer = new ElapsedTime(MILLISECONDS);
+    public void collectStateMachine() {
+        switch (dumpState) {
+            case IDLE:
+                //do nothing
+                break;
+            case DUMP:
+                dumper.setPosition(1.0);
+                dumpStateTimer.reset();
+                dumpState = Collect.WAIT;
+                break;
+            case WAIT:
+                if (dumpStateTimer.milliseconds() > 500) {
+                    dumpState = Collect.COLLECT;
+                }
+                break;
+            case COLLECT:
+                dumper.setPosition(-1.0);
+                dumpState = Collect.IDLE;
+                break;
+
+        }
+    }
+
 
     public void initElevator()
     {
@@ -181,24 +252,37 @@ public class ExtraOpModeFunctions
     {
         intake.setPower(0);
     }
-    
-    /*
+
+    public enum ArmPosition {STOP, EXTEND, RETRACT, HORIZONTAL}
+    ArmPosition armPosition = ArmPosition.STOP;
+
     public void armExtend()
     {
-        target = 1500;
+        armPosition = ArmPosition.EXTEND;
+        target = 1620;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(target);
         arm.setPower(1.0);
     }
     public void armRetract()
     {
-        target = 0;
+        armPosition = ArmPosition.RETRACT;
+        target = 100;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(target);
         arm.setPower(1.0);
     }
-    */
+    public void armHorizontal()
+    {
+        armPosition = ArmPosition.HORIZONTAL;
+        target = 1500;
+        arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        arm.setTargetPosition(target);
+        arm.setPower(1.0);
+    }
 
+
+    /*
     public void armExtend()
     {
         arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -214,21 +298,29 @@ public class ExtraOpModeFunctions
         arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         arm.setPower(0.0);
     }
-
-    public void otherElevatorTest()
+    */
+    public void elevatorDown()
     {
         target = 100;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
         elevator.setPower(1.0);
     }
-    public void elevatorTest()
+    public void elevatorHighBasket()
     {
         target = 2500;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
         elevator.setPower(1.0);
     }
+    public void elevatorHighBar()
+    {
+        target = 1500;
+        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        elevator.setTargetPosition(target);
+        elevator.setPower(1.0);
+    }
+
     public void elevatorOff()
     {
         elevator.setPower(0);

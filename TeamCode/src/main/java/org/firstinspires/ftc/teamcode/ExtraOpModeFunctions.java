@@ -139,18 +139,18 @@ public class ExtraOpModeFunctions
                 break;
             case ARMUP:
                 armRetract();
-                intakeForward();
+                intakeIn();
                 tailDown();
                 basketDeliveryStateTimer.reset();
                 basketDeliveryState = BasketDelivery.WAIT1;
                 break;
             case WAIT1:
-                if (basketDeliveryStateTimer.milliseconds() > 1000) {
+                if (basketDeliveryStateTimer.milliseconds() > 700) {
                     basketDeliveryState = BasketDelivery.INTAKEOUT;
                 }
                 break;
             case INTAKEOUT:
-                intakeReverse();
+                intakeOut();
                 basketDeliveryStateTimer.reset();
                 basketDeliveryState = BasketDelivery.WAIT2;
                 break;
@@ -242,11 +242,11 @@ public class ExtraOpModeFunctions
         elbow.setPosition(elbow.getPosition() + distance);
     }
 
-    public void intakeForward() {
-        intake.setPower(1);
-    }
-    public void intakeReverse() {
+    public void intakeIn() {
         intake.setPower(-1);
+    }
+    public void intakeOut() {
+        intake.setPower(1);
     }
     public void intakeOff()
     {
@@ -275,7 +275,7 @@ public class ExtraOpModeFunctions
     public void armHorizontal()
     {
         armPosition = ArmPosition.HORIZONTAL;
-        target = 1500;
+        target = 1200;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(target);
         arm.setPower(1.0);
@@ -306,14 +306,21 @@ public class ExtraOpModeFunctions
         elevator.setTargetPosition(target);
         elevator.setPower(1.0);
     }
-    public void elevatorHighBasket()
+    public void elevatorSpecimanGrab()
     {
-        target = 2500;
+        target = 50;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
         elevator.setPower(1.0);
     }
-    public void elevatorHighBar()
+    public void elevatorHighBasket()
+    {
+        target = 2600;
+        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        elevator.setTargetPosition(target);
+        elevator.setPower(1.0);
+    }
+    public void elevatorHighChamber()
     {
         target = 1500;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);

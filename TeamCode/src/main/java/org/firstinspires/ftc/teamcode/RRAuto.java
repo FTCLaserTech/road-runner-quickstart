@@ -63,7 +63,7 @@ public class RRAuto extends LinearOpMode
                     new SequentialAction(
                             new SleepAction(0),
                             new InstantAction(() -> extras.armExtend()),
-                            new InstantAction(() -> extras.intakeForward()),
+                            new InstantAction(() -> extras.intakeIn()),
                             new SleepAction(2)
                     )
             ));

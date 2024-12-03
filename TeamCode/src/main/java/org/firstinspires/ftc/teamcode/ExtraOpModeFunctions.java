@@ -22,6 +22,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 
 @Config
@@ -73,6 +74,8 @@ public class ExtraOpModeFunctions
     public TouchSensor elevatorLimit;
     public Servo tail;
     public Servo dumper;
+
+    public boolean firstPressed = true;
 
 
 
@@ -180,7 +183,7 @@ public class ExtraOpModeFunctions
                 dumpState = Collect.WAIT;
                 break;
             case WAIT:
-                if (dumpStateTimer.milliseconds() > 500) {
+                if (dumpStateTimer.milliseconds() > 1200) {
                     dumpState = Collect.COLLECT;
                 }
                 break;
@@ -209,7 +212,7 @@ public class ExtraOpModeFunctions
         elevator.setPower(-0.1);
 
 
-        while(!elevatorLimit.isPressed())
+        while(elevatorLimit.isPressed())
         {
             ;
         }
@@ -235,6 +238,40 @@ public class ExtraOpModeFunctions
         localLop.telemetry.update();
 
     }
+    public void initArm()
+    {
+        arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        arm.setPower(-0.1);
+        arm.setCurrentAlert(5, CurrentUnit.AMPS);
+
+        while(!arm.isOverCurrent())
+        {
+            localLop.telemetry.addData("Current", arm.getCurrent(CurrentUnit.AMPS));
+            localLop.telemetry.update();
+        }
+
+        arm.setPower(0);
+
+        arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        localLop.sleep(250);
+
+        arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+        /*
+        elevatorLeft.setTargetPosition(20);
+        elevatorRight.setTargetPosition(20);
+
+        elevatorLeft.setPower(1.0);
+        elevatorRight.setPower(1.0);
+
+         */
+
+        localLop.telemetry.addLine("Arm Initialized!");
+        localLop.telemetry.update();
+
+    }
+
 
 
     public void elbowMove (int distance)
@@ -253,13 +290,13 @@ public class ExtraOpModeFunctions
         intake.setPower(0);
     }
 
-    public enum ArmPosition {STOP, EXTEND, RETRACT, HORIZONTAL}
+    public enum ArmPosition {STOP, EXTEND, RETRACT, HORIZONTAL, VERTICAL,HANG}
     ArmPosition armPosition = ArmPosition.STOP;
 
     public void armExtend()
     {
         armPosition = ArmPosition.EXTEND;
-        target = 1620;
+        target = 1600;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(target);
         arm.setPower(1.0);
@@ -275,7 +312,23 @@ public class ExtraOpModeFunctions
     public void armHorizontal()
     {
         armPosition = ArmPosition.HORIZONTAL;
-        target = 1200;
+        target = 1400;
+        arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        arm.setTargetPosition(target);
+        arm.setPower(1.0);
+    }
+    public void armVertical()
+    {
+        armPosition = ArmPosition.VERTICAL;
+        target = 500;
+        arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        arm.setTargetPosition(target);
+        arm.setPower(1.0);
+    }
+    public void armHang()
+    {
+        armPosition = ArmPosition.HANG;
+        target = 0;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(target);
         arm.setPower(1.0);
@@ -305,13 +358,15 @@ public class ExtraOpModeFunctions
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
         elevator.setPower(1.0);
+        firstPressed = true;
     }
     public void elevatorSpecimanGrab()
     {
-        target = 50;
+        target = 40;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
         elevator.setPower(1.0);
+        firstPressed = true;
     }
     public void elevatorHighBasket()
     {
@@ -319,6 +374,7 @@ public class ExtraOpModeFunctions
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
         elevator.setPower(1.0);
+        firstPressed = true;
     }
     public void elevatorHighChamber()
     {
@@ -326,6 +382,7 @@ public class ExtraOpModeFunctions
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
         elevator.setPower(1.0);
+        firstPressed = true;
     }
 
     public void elevatorOff()

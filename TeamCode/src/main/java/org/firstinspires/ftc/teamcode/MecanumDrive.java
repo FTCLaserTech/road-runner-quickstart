@@ -261,8 +261,8 @@ public final class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        //localizer = new DriveLocalizer();
-        localizer = new GoBildaPinpointLocalizer(hardwareMap, odo);
+        localizer = new DriveLocalizer();
+        //localizer = new GoBildaPinpointLocalizer(hardwareMap, odo);
 
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
@@ -481,9 +481,9 @@ public final class MecanumDrive {
     public PoseVelocity2d updatePoseEstimate() {
 
         Twist2dDual<Time> twist = localizer.update();
-        //pose = pose.plus(twist.value());
+        pose = pose.plus(twist.value());
 
-        pose = new Pose2d(new Vector2d(odo.getPosX(), odo.getPosY()), Rotation2d.exp(odo.getHeading()));
+        //pose = new Pose2d(new Vector2d(odo.getPosX(), odo.getPosY()), Rotation2d.exp(odo.getHeading()));
 
         poseHistory.add(pose);
         while (poseHistory.size() > 100) {

@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
@@ -53,6 +54,7 @@ public class BasicTeleOp extends LinearOpMode
         boolean gp1_a_pressed = false;
         boolean gp2_x_pressed = false;
         boolean gp2_by_pressed = false;
+        boolean gp2_bx_pressed = false;
 
 
         boolean elevatorStopped = true;
@@ -79,6 +81,7 @@ public class BasicTeleOp extends LinearOpMode
         double currentAmpsRight;
         double maxAmps = 0;
         int numDangerAmps = 0;
+        int elevatorResetCounter = 0;
 
         //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -142,9 +145,9 @@ public class BasicTeleOp extends LinearOpMode
 
 
             if (gamepad1.left_bumper)
-                speedMultiplier = 0.5;
+                speedMultiplier = 0.75;
             else
-                speedMultiplier = 1.0;
+                speedMultiplier = 0.5;
 
             //adjustedAngle = 0;
             //adjustedAngle = extras.adjustAngleForDriverPosition(drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), ExtraOpModeFunctions.RobotStartPosition.STRAIGHT);
@@ -285,6 +288,14 @@ public class BasicTeleOp extends LinearOpMode
             */
             drive.updatePoseEstimate();
 
+            if((!extras.elevatorLimit.isPressed()) && extras.firstPressed)
+            {
+                elevatorResetCounter += 1;
+                extras.firstPressed = false;
+                extras.elevator.setPower(0);
+                extras.elevator.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            }
+
             if (gamepad2.a)
             {
                 extras.elevatorDown();
@@ -305,6 +316,7 @@ public class BasicTeleOp extends LinearOpMode
 
             if (gamepad2.dpad_up)
             {
+                extras.armVertical();
                 extras.elevatorHighChamber();
                 telemetry.addData("Dpad down", extras.elevator.getTargetPosition());
                 telemetry.addData("Dpad down", extras.elevator.getPower());
@@ -313,6 +325,7 @@ public class BasicTeleOp extends LinearOpMode
 
             if (gamepad2.dpad_down)
             {
+                extras.armVertical();
                 extras.elevatorSpecimanGrab();
                 telemetry.addData("Dpad up", extras.elevator.getTargetPosition());
                 telemetry.addData("Dpad up", extras.elevator.getPower());
@@ -338,7 +351,7 @@ public class BasicTeleOp extends LinearOpMode
                 sleep(1000);
                 //drive.imu.resetYaw();
             }
-
+            */
             // Init Elevator
             if ((gamepad2.back) && (gamepad2.y))
             {
@@ -346,17 +359,20 @@ public class BasicTeleOp extends LinearOpMode
             }
             else if (!gamepad2.y && gp2_by_pressed)
             {
-                //extras.initElevator();
+                extras.initElevator();
                 gp2_by_pressed = false;
-                extras.elevator.setPower(0.0);
-                extras.elevator.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
-                extras.elevator.setTargetPosition(0);
-
-                extras.elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
             }
-            */
+
+            if ((gamepad2.back) && (gamepad2.x))
+            {
+                gp2_bx_pressed = true;
+            }
+            else if (!gamepad2.y && gp2_bx_pressed)
+            {
+                extras.initArm();
+                gp2_bx_pressed = false;
+            }
+
             //extend arm
             /*
             if (gamepad2.y)
@@ -457,6 +473,12 @@ public class BasicTeleOp extends LinearOpMode
 
             }
 
+            if(gamepad2.right_bumper)
+            {
+                extras.armHang();
+            }
+
+
                 //extras.setLeds(getRuntime());
 
             telemetry.addData("step", extras.step);
@@ -475,8 +497,11 @@ public class BasicTeleOp extends LinearOpMode
             telemetry.addData("Elevator encoder counts: ", extras.elevator.getCurrentPosition());
             telemetry.addData("Elevator target counts: ", extras.elevator.getTargetPosition());
             telemetry.addData("Elevator current: ", currentAmps);
+            telemetry.addData("Arm current: ", currentAmps1);
             telemetry.addData("Max amps: ", maxAmps);
             telemetry.addData("Elevator limit: ", extras.elevatorLimit.isPressed());
+            telemetry.addData("Elevator Resets: ", elevatorResetCounter);
+
             //telemetry.addData("Elevator stopped? ", elevatorStopped);
             //telemetry.addData("lift position", extras.lift.getCurrentPosition());
 

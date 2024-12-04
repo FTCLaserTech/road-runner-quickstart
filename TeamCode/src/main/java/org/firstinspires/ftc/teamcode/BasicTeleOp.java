@@ -69,6 +69,10 @@ public class BasicTeleOp extends LinearOpMode
         double elevHeightMax = 800;
         double slope;
         double elevatorEncoderCounts;
+        double rightBackEncoderCounts;;
+        double rightFrontEncoderCounts;;
+        double leftBackEncoderCounts;;
+        double leftFrontEnocoderCounts;;
 
         double frontLeftPower;
         double frontRightPower;
@@ -214,6 +218,11 @@ public class BasicTeleOp extends LinearOpMode
             slope = -elevMultMin / elevHeightMax;
             elevatorEncoderCounts = (extras.elevator.getCurrentPosition());
             elevMult = slope * elevatorEncoderCounts + 1;
+
+            leftBackEncoderCounts = (drive.leftBack.getCurrentPosition());
+            leftFrontEnocoderCounts = (drive.leftFront.getCurrentPosition());
+            rightBackEncoderCounts = (drive.rightBack.getCurrentPosition());
+            rightFrontEncoderCounts = (drive.rightFront.getCurrentPosition());
 
 
             // MANUAL ELEVATOR CONTROL- gamepad 2
@@ -501,6 +510,10 @@ public class BasicTeleOp extends LinearOpMode
             telemetry.addData("Max amps: ", maxAmps);
             telemetry.addData("Elevator limit: ", extras.elevatorLimit.isPressed());
             telemetry.addData("Elevator Resets: ", elevatorResetCounter);
+            telemetry.addData("Back Left", leftBackEncoderCounts);
+            telemetry.addData("Back Right", rightBackEncoderCounts);
+            telemetry.addData("Front Left", leftFrontEnocoderCounts);
+            telemetry.addData("Front Right ", rightFrontEncoderCounts);
 
             //telemetry.addData("Elevator stopped? ", elevatorStopped);
             //telemetry.addData("lift position", extras.lift.getCurrentPosition());

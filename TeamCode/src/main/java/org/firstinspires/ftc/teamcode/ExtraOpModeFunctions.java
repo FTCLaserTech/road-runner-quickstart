@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 
+import android.os.Environment;
+
 import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -23,6 +25,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 
 
 @Config
@@ -269,10 +279,7 @@ public class ExtraOpModeFunctions
 
         localLop.telemetry.addLine("Arm Initialized!");
         localLop.telemetry.update();
-
     }
-
-
 
     public void elbowMove (int distance)
     {
@@ -334,24 +341,6 @@ public class ExtraOpModeFunctions
         arm.setPower(1.0);
     }
 
-
-    /*
-    public void armExtend()
-    {
-        arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        arm.setPower(0.2);
-    }
-    public void armRetract()
-    {
-        arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        arm.setPower(-0.2);
-    }
-    public void armStop()
-    {
-        arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        arm.setPower(0.0);
-    }
-    */
     public void elevatorDown()
     {
         target = 100;
@@ -362,7 +351,7 @@ public class ExtraOpModeFunctions
     }
     public void elevatorSpecimanGrab()
     {
-        target = 40;
+        target = 20;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
         elevator.setPower(1.0);
@@ -378,7 +367,7 @@ public class ExtraOpModeFunctions
     }
     public void elevatorHighChamber()
     {
-        target = 1500;
+        target = 1400;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(target);
         elevator.setPower(1.0);
@@ -405,63 +394,6 @@ public class ExtraOpModeFunctions
         elevatorRight.setPower(1.0);
     }
     */
-
-
-
-    public void elevatorGround()
-    {
-        target = 0;
-        elevatorPosition = elevatorPosition.COLLECT;
-
-        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
-
-        elevator.setPower(1.0);
-    }
-
-    public void elevatorJunction()
-    {
-        target = 20;
-        elevatorPosition = elevatorPosition.GROUND;
-
-        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
-
-        elevator.setPower(1.0);
-    }
-
-    public void elevatorLow()
-    {
-        target = 1210;
-        elevatorPosition = elevatorPosition.LOW;
-
-        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
-
-        elevator.setPower(1.0);
-    }
-
-    public void elevatorMiddle()
-    {
-        target = 2020;
-        elevatorPosition = elevatorPosition.MIDDLE;
-
-        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
-
-        elevator.setPower(1.0);
-    }
-
-    public void elevatorHigh()
-    {
-        target = 2820;
-        elevatorPosition = elevatorPosition.HIGH;
-
-        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
-
-        elevator.setPower(1.0);
-    }
 
     public void tailUp()
     {
@@ -508,4 +440,43 @@ public class ExtraOpModeFunctions
         }
         return angle;
     }
+
+    private static final String BASE_FOLDER_NAME = "Team14631";
+    private static final String TEAM_LOG = "Team14631";
+    public void saveAutoStartRotation(Double angle)
+    {
+        Writer fileWriter;
+        String directoryPath = Environment.getExternalStorageDirectory().getPath()+"/"+BASE_FOLDER_NAME;
+        File directory = new File(directoryPath);
+        directory.mkdir();
+        try
+        {
+            fileWriter = new FileWriter(directoryPath+"/"+TEAM_LOG+".csv");
+            fileWriter.write(angle.toString());
+            fileWriter.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public double readAutoStartRotation()
+    {
+        double angle = 0;
+        String directoryPath = Environment.getExternalStorageDirectory().getPath()+"/"+BASE_FOLDER_NAME;
+        File directory = new File(directoryPath);
+        directory.mkdir();
+        try
+        {
+            BufferedReader br = new BufferedReader(new FileReader(directoryPath+"/"+TEAM_LOG+".csv"));
+            angle = Double.parseDouble(br.readLine());
+            br.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return(angle);
+    }
 }
+

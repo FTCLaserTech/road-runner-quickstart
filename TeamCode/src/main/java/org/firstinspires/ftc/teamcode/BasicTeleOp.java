@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
@@ -28,6 +30,9 @@ public class BasicTeleOp extends LinearOpMode
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this, ExtraOpModeFunctions.FieldSide.BLUE);
         //TrajectoryBook book = new TrajectoryBook(drive, extras);
 
+        IMU.Parameters imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                drive.PARAMS.logoFacingDirection,
+                drive.PARAMS.usbFacingDirection));
         int IMUReset = 0;
         int elevatorBottomThreshold = 200;
         double stickForward;
@@ -91,6 +96,10 @@ public class BasicTeleOp extends LinearOpMode
 
         //extras.wristMiddle();
         //extras.clawOpen();
+
+        double previousOrientation = extras.readAutoStartRotation();
+        telemetry.addData("Previous Orientation: ", previousOrientation);
+        telemetry.update();
 
         waitForStart();
 
@@ -310,8 +319,6 @@ public class BasicTeleOp extends LinearOpMode
                 extras.elevatorDown();
                 extras.armHorizontal();
                 extras.tailUp();
-                telemetry.addData("Dpad down", extras.elevator.getTargetPosition());
-                telemetry.addData("Dpad down", extras.elevator.getPower());
 
             }
             /*
@@ -327,8 +334,9 @@ public class BasicTeleOp extends LinearOpMode
             {
                 extras.armVertical();
                 extras.elevatorHighChamber();
-                telemetry.addData("Dpad down", extras.elevator.getTargetPosition());
-                telemetry.addData("Dpad down", extras.elevator.getPower());
+                extras.tailDown();
+                telemetry.addData("Dpad up", extras.elevator.getTargetPosition());
+                telemetry.addData("Dpad up", extras.elevator.getPower());
 
             }
 
@@ -336,11 +344,11 @@ public class BasicTeleOp extends LinearOpMode
             {
                 extras.armVertical();
                 extras.elevatorSpecimanGrab();
-                telemetry.addData("Dpad up", extras.elevator.getTargetPosition());
-                telemetry.addData("Dpad up", extras.elevator.getPower());
+                extras.tailUp();
+                telemetry.addData("Dpad down", extras.elevator.getTargetPosition());
+                telemetry.addData("Dpad down", extras.elevator.getPower());
             }
 
-            /*
             // RESET IMU
             if ((gamepad1.back) && (gamepad1.b))
             {
@@ -352,15 +360,12 @@ public class BasicTeleOp extends LinearOpMode
                 telemetry.addLine("IMU Resetting...");
                 telemetry.update();
 
-                IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                        drive.PARAMS.logoFacingDirection,
-                        drive.PARAMS.usbFacingDirection));
-                //drive.imu.initialize(parameters);
+                //drive.imu.initialize(imuParameters);
+                drive.odo.resetPosAndIMU();
 
-                sleep(1000);
-                //drive.imu.resetYaw();
+                sleep(500);
             }
-            */
+
             // Init Elevator
             if ((gamepad2.back) && (gamepad2.y))
             {

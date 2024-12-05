@@ -35,7 +35,6 @@ public class RRAuto extends LinearOpMode
         Pose2d right = new Pose2d(0,0,0);
 
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this, ExtraOpModeFunctions.FieldSide.RED);
-
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
         //sleep(500);
@@ -102,6 +101,7 @@ public class RRAuto extends LinearOpMode
 
         //Drop off specimen 4
 
+        extras.saveAutoStartRotation(drive.odo.getHeading());
 
 
     }

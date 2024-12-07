@@ -85,11 +85,12 @@ public class BasicTeleOp extends LinearOpMode
         double backRightPower;
         double stickRotation;
 
-        double currentAmps;
-        double currentAmps1;
-        double currentAmpsRight;
-        double maxAmps = 0;
-        int numDangerAmps = 0;
+        double armCurrent = 0;
+        double maxArmCurrent = 0;
+        int numDangerArmAmps = 0;
+        double elevatorCurrent = 0;
+        double maxElevatorCurrent = 0;
+        int numDangerElevatorAmps = 0;
         int elevatorResetCounter = 0;
 
         //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -105,22 +106,37 @@ public class BasicTeleOp extends LinearOpMode
 
         while (!isStopRequested())
         {
-
-
-            currentAmps = extras.elevator.getCurrent(CurrentUnit.AMPS);
-
-            if (currentAmps > maxAmps)
+            elevatorCurrent = extras.elevator.getCurrent(CurrentUnit.AMPS);
+            if (elevatorCurrent > maxElevatorCurrent)
             {
-                maxAmps = currentAmps;
+                maxElevatorCurrent = elevatorCurrent;
             }
 
-            if (currentAmps >= 7)
+            if (elevatorCurrent >= 7)
             {
-                numDangerAmps += 1;
+                numDangerElevatorAmps += 1;
+                telemetry.addLine("WARNING: HIGH ELEVATOR AMPS");
+                if(numDangerElevatorAmps >= 10)
+                {
+                    // in future, ONLY stop elevator motion
+                    stop();
+                }
+            }
+            else
+            {
+                numDangerElevatorAmps = 0;
+            }
 
+            armCurrent = extras.arm.getCurrent(CurrentUnit.AMPS);
+            if (armCurrent > maxArmCurrent)
+            {
+                maxArmCurrent = armCurrent;
+            }
+            if (armCurrent >= 7)
+            {
+                numDangerArmAmps += 1;
                 telemetry.addLine("WARNING: HIGH AMPS");
-
-                if(numDangerAmps >= 10)
+                if(numDangerArmAmps >= 10)
                 {
                     // in future, ONLY stop arm motion
                     stop();
@@ -128,34 +144,8 @@ public class BasicTeleOp extends LinearOpMode
             }
             else
             {
-                numDangerAmps = 0;
+                numDangerArmAmps = 0;
             }
-
-            currentAmps1 = extras.arm.getCurrent(CurrentUnit.AMPS);
-
-            if (currentAmps1 > maxAmps)
-            {
-                maxAmps = currentAmps;
-            }
-
-            if (currentAmps1 >= 7)
-            {
-                numDangerAmps += 1;
-
-                telemetry.addLine("WARNING: HIGH AMPS");
-
-                if(numDangerAmps >= 10)
-                {
-                    // in future, ONLY stop arm motion
-                    stop();
-                }
-            }
-            else
-            {
-                numDangerAmps = 0;
-            }
-
-
 
             if (gamepad1.left_bumper)
                 speedMultiplier = 0.75;
@@ -166,8 +156,6 @@ public class BasicTeleOp extends LinearOpMode
             //adjustedAngle = extras.adjustAngleForDriverPosition(drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), ExtraOpModeFunctions.RobotStartPosition.STRAIGHT);
             drive.odo.update();
             adjustedAngle = drive.odo.getHeading() + (Math.PI / 2);
-
-
             stickSideways = gamepad1.left_stick_x * speedMultiplier;
             stickForward = -gamepad1.left_stick_y * speedMultiplier;
             stickSidewaysRotated = (stickSideways * Math.cos(-adjustedAngle)) - (stickForward * Math.sin(-adjustedAngle));
@@ -209,7 +197,6 @@ public class BasicTeleOp extends LinearOpMode
                         highest = 1;
                     }
 
-
                     // Normalize each of the values
                     frontLeftPower = (frontLeftPower / highest) * (speedMultiplier / 10);
                     frontRightPower = (frontRightPower / highest) * (speedMultiplier / 10);
@@ -224,10 +211,10 @@ public class BasicTeleOp extends LinearOpMode
             }
 
 
+            /*
             slope = -elevMultMin / elevHeightMax;
             elevatorEncoderCounts = (extras.elevator.getCurrentPosition());
             elevMult = slope * elevatorEncoderCounts + 1;
-
             leftBackEncoderCounts = (drive.leftBack.getCurrentPosition());
             leftFrontEnocoderCounts = (drive.leftFront.getCurrentPosition());
             rightBackEncoderCounts = (drive.rightBack.getCurrentPosition());
@@ -238,7 +225,6 @@ public class BasicTeleOp extends LinearOpMode
             // stop if the limit switch is pressed
 
             float elevatorStick = gamepad2.left_stick_y;
-            /*
             if(extras.elevatorLimit.isPressed())
             {
                 extras.elevator.setPower(0);
@@ -319,7 +305,6 @@ public class BasicTeleOp extends LinearOpMode
                 extras.elevatorDown();
                 extras.armHorizontal();
                 extras.tailUp();
-
             }
             /*
             if (gamepad2.y)
@@ -334,17 +319,16 @@ public class BasicTeleOp extends LinearOpMode
             {
                 extras.armVertical();
                 extras.elevatorHighChamber();
-                extras.tailDown();
+                //extras.tailDown();
                 telemetry.addData("Dpad up", extras.elevator.getTargetPosition());
                 telemetry.addData("Dpad up", extras.elevator.getPower());
-
             }
 
             if (gamepad2.dpad_down)
             {
                 extras.armVertical();
                 extras.elevatorSpecimanGrab();
-                extras.tailUp();
+                //extras.tailUp();
                 telemetry.addData("Dpad down", extras.elevator.getTargetPosition());
                 telemetry.addData("Dpad down", extras.elevator.getPower());
             }
@@ -404,7 +388,6 @@ public class BasicTeleOp extends LinearOpMode
             }
              */
 
-
             if (gamepad1.left_trigger > 0)
             {
                 extras.intakeOut();
@@ -438,8 +421,6 @@ public class BasicTeleOp extends LinearOpMode
                 extras.tailDown();
             }
 
-
-
             if(gamepad2.y)
             {
                 gp2_y_pressed = true;
@@ -450,7 +431,6 @@ public class BasicTeleOp extends LinearOpMode
                 {
                     extras.basketDeliveryState = ExtraOpModeFunctions.BasketDelivery.ARMUP;
                 }
-
             }
 
             extras.basketDeliveryStateMachine();
@@ -465,7 +445,6 @@ public class BasicTeleOp extends LinearOpMode
                 {
                     extras.dumpState = ExtraOpModeFunctions.Collect.DUMP;
                 }
-
             }
 
             extras.collectStateMachine();
@@ -484,7 +463,6 @@ public class BasicTeleOp extends LinearOpMode
                 {
                     extras.armExtend();
                 }
-
             }
 
             if(gamepad2.right_bumper)
@@ -492,38 +470,34 @@ public class BasicTeleOp extends LinearOpMode
                 extras.armHang();
             }
 
+            //extras.setLeds(getRuntime());
 
-                //extras.setLeds(getRuntime());
-
-            telemetry.addData("step", extras.step);
             //telemetry.addData("x", drive.pose.position.x);
             //telemetry.addData("y", drive.pose.position.y);
             //telemetry.addData("heading", drive.pose.heading.real);
+
             telemetry.addData("ODO angle", adjustedAngle);
             //telemetry.addData("IMU angle", drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
 
-            Pose2D pos = drive.odo.getPosition();
-            String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
+            //Pose2D pos = drive.odo.getPosition();
+            //String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
+            //telemetry.addData("Position", data);
 
-            telemetry.addData("Position", data);
-            telemetry.addLine();
-            telemetry.addData("Arm Counts", extras.arm.getCurrentPosition());
-            telemetry.addData("Elevator encoder counts: ", extras.elevator.getCurrentPosition());
-            telemetry.addData("Elevator target counts: ", extras.elevator.getTargetPosition());
-            telemetry.addData("Elevator current: ", currentAmps);
-            telemetry.addData("Arm current: ", currentAmps1);
-            telemetry.addData("Max amps: ", maxAmps);
+            //telemetry.addLine();
+
+            telemetry.addData("Arm Encoder Counts: ", extras.arm.getCurrentPosition());
+            telemetry.addData("Arm Target Counts: ", extras.arm.getTargetPosition());
+            telemetry.addData("Arm Current: ", armCurrent);
+            telemetry.addData("Arm Max Current: ", maxArmCurrent);
+            telemetry.addData("Elevator Encoder Counts: ", extras.elevator.getCurrentPosition());
+            telemetry.addData("Elevator Target Counts: ", extras.elevator.getTargetPosition());
+            telemetry.addData("Elevator Current: ", elevatorCurrent);
+            telemetry.addData("Elevator Max Current: ", maxElevatorCurrent);
             telemetry.addData("Elevator limit: ", extras.elevatorLimit.isPressed());
             telemetry.addData("Elevator Resets: ", elevatorResetCounter);
-            telemetry.addData("Back Left", leftBackEncoderCounts);
-            telemetry.addData("Back Right", rightBackEncoderCounts);
-            telemetry.addData("Front Left", leftFrontEnocoderCounts);
-            telemetry.addData("Front Right ", rightFrontEncoderCounts);
 
             //telemetry.addData("Elevator stopped? ", elevatorStopped);
-            //telemetry.addData("lift position", extras.lift.getCurrentPosition());
 
-            //telemetry.addData("LF RF LB RB: ", "%.1f %.1f %.1f %.1f", drive.leftFront.getPower(), drive.rightFront.getPower(), drive.leftBack.getPower(), drive.rightBack.getPower());
             telemetry.addData("Elapsed time: ", getRuntime());
 
             telemetry.update();

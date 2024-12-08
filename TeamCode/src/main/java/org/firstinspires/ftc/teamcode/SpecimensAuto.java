@@ -28,9 +28,9 @@ public class SpecimensAuto extends LinearOpMode
         double initialRotation = 270;
         Pose2d initPose = new Pose2d(0,0,Math.toRadians(initialRotation));
         Pose2d toSubmursible = new Pose2d(-15,29,Math.toRadians(270));
-        Pose2d backUpFromSubmursible = new Pose2d(0,15,Math.toRadians(315));
-        Pose2d lineUpForSweep = new Pose2d(20,18,Math.toRadians(405));
-        Pose2d sweep = new Pose2d(20,18,Math.toRadians(350));
+        Pose2d backUpFromSubmursible = new Pose2d(5,15,Math.toRadians(360));
+        Pose2d lineUpForSweep = new Pose2d(20,24,Math.toRadians(405));
+        Pose2d sweep = new Pose2d(20,24,Math.toRadians(350));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
@@ -86,6 +86,8 @@ public class SpecimensAuto extends LinearOpMode
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(sweep.position, sweep.heading, new TranslationalVelConstraint(5.0))
                         .build());
+
+        sleep(5000);
 
 
         // Hang #2

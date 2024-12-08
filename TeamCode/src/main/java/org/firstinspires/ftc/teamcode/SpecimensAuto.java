@@ -18,20 +18,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Config
 @Autonomous(group = "a")
 
-
 public class SpecimensAuto extends LinearOpMode
 {
-
     @Override
     public void runOpMode() throws InterruptedException
     {
         //Pose2d purplePixelDropoff = new Pose2d(0,0,0);
         Pose2d initPose = new Pose2d(0,0,Math.toRadians(270));
-        Pose2d toSubmursible = new Pose2d(0,0,0);
-        Pose2d left = new Pose2d(0,0,0);
-        Pose2d dropoff = new Pose2d(0,0,0);
-        Pose2d mid = new Pose2d(0,0,0);
-        Pose2d right = new Pose2d(0,0,0);
+        Pose2d toSubmursible = new Pose2d(-15,29,Math.toRadians(270));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
@@ -45,18 +39,12 @@ public class SpecimensAuto extends LinearOpMode
         telemetry.addData("heading", drive.pose.heading);
         telemetry.update();
 
-
         while (!isStopRequested() && !opModeIsActive())
         {
             sleep(10);
         }
 
-        toSubmursible = new Pose2d(-15, 29, Math.toRadians(270));
-        //left = new Pose2d(35, 31, Math.toRadians(0));
-        //dropoff = new Pose2d(35, 31, Math.toRadians(0));
-
-        //Left sample
-
+        // hang pre-loaded sample in the high chamber
         Action DriveToNearSubmursibleAction = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(15.0))
                 .build();
@@ -69,42 +57,24 @@ public class SpecimensAuto extends LinearOpMode
                         new InstantAction(() -> extras.elevatorHighChamber()),
                         new SleepAction(5),
                         new InstantAction(() -> extras.elevatorSpecimanGrab())
-
                 )
         ));
 
         sleep(5000);
-        //Drop off
 
-        //Mid sample
+        // Move 3 samples from the field into the drop off
 
-        //Drop off
+        // Hang #2
 
-        //Right sample
+        // Hang #3
 
-        //Drop off
+        // Hang #4
 
-        //Grab Specimen 1
+        // Hang #5
 
-        //Drop off specimen 1
-
-        //Grab Specimen 2
-
-        //Drop off specimen 2
-
-        //Grab Specimen 3
-
-        //Drop off specimen 3
-
-        //Grab Specimen 4
-
-        //Drop off specimen 4
-
+        // Save the ending location
         extras.saveAutoStartRotation(drive.odo.getHeading());
-
-
     }
-
 
     public void safeWaitSeconds(double time)
     {
@@ -113,7 +83,5 @@ public class SpecimensAuto extends LinearOpMode
         while (!isStopRequested() && timer.time() < time) {
         }
     }
-
-
 }
 

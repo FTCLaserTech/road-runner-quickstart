@@ -18,20 +18,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Config
 @Autonomous(group = "a")
 
-
 public class SamplesAuto extends LinearOpMode
 {
-
     @Override
     public void runOpMode() throws InterruptedException
     {
-        //Pose2d purplePixelDropoff = new Pose2d(0,0,0);
-        Pose2d initPose = new Pose2d(0,0,Math.toRadians(90));
-        Pose2d toSubmursible = new Pose2d(0,0,0);
-        Pose2d left = new Pose2d(0,0,0);
-        Pose2d dropoff = new Pose2d(0,0,0);
-        Pose2d mid = new Pose2d(0,0,0);
-        Pose2d right = new Pose2d(0,0,0);
+        Pose2d initPose = new Pose2d(0,0, Math.toRadians(90));
+        Pose2d toPole = new Pose2d(-15,10, Math.toRadians(45));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
@@ -45,18 +38,15 @@ public class SamplesAuto extends LinearOpMode
         telemetry.addData("heading", drive.pose.heading);
         telemetry.update();
 
-
         while (!isStopRequested() && !opModeIsActive())
         {
-            sleep(10);
+            safeWaitSeconds(0.010);
+            //sleep(10);
         }
 
-        toSubmursible = new Pose2d(-15, 10, Math.toRadians(45));
-        //left = new Pose2d(35, 31, Math.toRadians(0));
-        //dropoff = new Pose2d(35, 31, Math.toRadians(0));
-
+        // put the preloaded sample in the high basket
         Action DriveToBasketPole = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(15.0))
+                .strafeToLinearHeading(toPole.position, toPole.heading, new TranslationalVelConstraint(15.0))
                 .build();
 
         Actions.runBlocking(new ParallelAction(
@@ -71,37 +61,18 @@ public class SamplesAuto extends LinearOpMode
         ));
 
         sleep(5000);
-        //Drop off
 
-        //Mid sample
+        //pick up the 1st sample on the field and put it in the high basket
 
-        //Drop off
+        //pick up the 2nd sample on the field and put it in the high basket
 
-        //Right sample
+        //pick up the 3rd sample on the field and put it in the high basket
 
-        //Drop off
+        //Park
 
-        //Grab Specimen 1
-
-        //Drop off specimen 1
-
-        //Grab Specimen 2
-
-        //Drop off specimen 2
-
-        //Grab Specimen 3
-
-        //Drop off specimen 3
-
-        //Grab Specimen 4
-
-        //Drop off specimen 4
-
+        // Save the ending location
         extras.saveAutoStartRotation(drive.odo.getHeading());
-
-
     }
-
 
     public void safeWaitSeconds(double time)
     {
@@ -110,7 +81,5 @@ public class SamplesAuto extends LinearOpMode
         while (!isStopRequested() && timer.time() < time) {
         }
     }
-
-
 }
 

@@ -34,8 +34,8 @@ public class RRAuto extends LinearOpMode
         Pose2d mid = new Pose2d(0,0,0);
         Pose2d right = new Pose2d(0,0,0);
 
-        ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this, ExtraOpModeFunctions.FieldSide.RED);
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
+        ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
 
         //sleep(500);
         //extras.initElevator();

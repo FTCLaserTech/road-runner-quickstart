@@ -27,7 +27,7 @@ public class BasicTeleOp extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0), this);
-        ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this, ExtraOpModeFunctions.FieldSide.BLUE);
+        ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
         //TrajectoryBook book = new TrajectoryBook(drive, extras);
 
         IMU.Parameters imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -86,10 +86,10 @@ public class BasicTeleOp extends LinearOpMode
         double stickRotation;
 
         double armCurrent = 0;
-        double maxArmCurrent = 0;
+        double armMaxCurrent = 0;
         int numDangerArmAmps = 0;
         double elevatorCurrent = 0;
-        double maxElevatorCurrent = 0;
+        double elevatorMaxCurrent = 0;
         int numDangerElevatorAmps = 0;
         int elevatorResetCounter = 0;
 
@@ -107,9 +107,9 @@ public class BasicTeleOp extends LinearOpMode
         while (!isStopRequested())
         {
             elevatorCurrent = extras.elevator.getCurrent(CurrentUnit.AMPS);
-            if (elevatorCurrent > maxElevatorCurrent)
+            if (elevatorCurrent > elevatorMaxCurrent)
             {
-                maxElevatorCurrent = elevatorCurrent;
+                elevatorMaxCurrent = elevatorCurrent;
             }
 
             if (elevatorCurrent >= 7)
@@ -128,9 +128,9 @@ public class BasicTeleOp extends LinearOpMode
             }
 
             armCurrent = extras.arm.getCurrent(CurrentUnit.AMPS);
-            if (armCurrent > maxArmCurrent)
+            if (armCurrent > armMaxCurrent)
             {
-                maxArmCurrent = armCurrent;
+                armMaxCurrent = armCurrent;
             }
             if (armCurrent >= 7)
             {
@@ -361,6 +361,7 @@ public class BasicTeleOp extends LinearOpMode
                 gp2_by_pressed = false;
             }
 
+            // Init Arm
             if ((gamepad2.back) && (gamepad2.x))
             {
                 gp2_bx_pressed = true;
@@ -370,23 +371,6 @@ public class BasicTeleOp extends LinearOpMode
                 extras.initArm();
                 gp2_bx_pressed = false;
             }
-
-            //extend arm
-            /*
-            if (gamepad2.y)
-            {
-                extras.armExtend();
-            }
-            //retract arm
-            else if (gamepad2.a && !gamepad2.start)
-            {
-                extras.armRetract();
-            }
-            else if (gamepad2.b)
-            {
-                extras.armHorizontal();
-            }
-             */
 
             if (gamepad1.left_trigger > 0)
             {
@@ -470,8 +454,6 @@ public class BasicTeleOp extends LinearOpMode
                 extras.armHang();
             }
 
-            //extras.setLeds(getRuntime());
-
             //telemetry.addData("x", drive.pose.position.x);
             //telemetry.addData("y", drive.pose.position.y);
             //telemetry.addData("heading", drive.pose.heading.real);
@@ -489,15 +471,13 @@ public class BasicTeleOp extends LinearOpMode
             telemetry.addData("Arm Encoder Counts: ", extras.arm.getCurrentPosition());
             telemetry.addData("Arm Target Counts: ", extras.arm.getTargetPosition());
             telemetry.addData("Arm Current: ", armCurrent);
-            telemetry.addData("Arm Max Current: ", maxArmCurrent);
+            telemetry.addData("Arm Max Current: ", armMaxCurrent);
             telemetry.addData("Elevator Encoder Counts: ", extras.elevator.getCurrentPosition());
             telemetry.addData("Elevator Target Counts: ", extras.elevator.getTargetPosition());
             telemetry.addData("Elevator Current: ", elevatorCurrent);
-            telemetry.addData("Elevator Max Current: ", maxElevatorCurrent);
+            telemetry.addData("Elevator Max Current: ", elevatorMaxCurrent);
             telemetry.addData("Elevator limit: ", extras.elevatorLimit.isPressed());
             telemetry.addData("Elevator Resets: ", elevatorResetCounter);
-
-            //telemetry.addData("Elevator stopped? ", elevatorStopped);
 
             telemetry.addData("Elapsed time: ", getRuntime());
 

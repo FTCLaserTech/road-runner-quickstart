@@ -15,15 +15,12 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 import java.io.BufferedReader;
@@ -31,7 +28,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 
 
@@ -40,40 +36,12 @@ import java.io.Writer;
 
 public class ExtraOpModeFunctions
 {
-    public enum Signal {LEFT, MIDDLE, RIGHT}
     public enum RobotStartPosition {STRAIGHT, LEFT, RIGHT};
-    public enum FieldSide {RED, BLUE}
-
-    public FieldSide fs = FieldSide.BLUE;
-
-    int numRed = 0;
-    int numGreen = 0;
-    int numBlue = 0;
-
-    final boolean USING_WEBCAM = true;
-    final BuiltinCameraDirection INTERNAL_CAM_DIR = BuiltinCameraDirection.BACK;
-    final int RESOLUTION_WIDTH = 640;
-    final int RESOLUTION_HEIGHT = 480;
-
-    // Internal state
-    boolean lastX;
-    int frameCount;
-    long capReqTime;
-
 
     public enum ElevatorPosition {COLLECT, GROUND, LOW, MIDDLE, HIGH, TWO, THREE, FOUR, FIVE}
-    public ElevatorPosition elevatorPosition = ElevatorPosition.COLLECT;
-    public enum ElbowPosition {EXTEND, RETRACT, PURPLE}
-    public ElbowPosition elbowPosition = ElbowPosition.RETRACT;
     public static final double PI = 3.14159265;
-    public int elevatorTargetPosition = 0;
 
-    public int elevatorHoverPos = 100;
-    public int target = 0;
-
-
-    //private VuforiaLocalizer vuforia = null;
-    WebcamName webcamName = null;
+    public int elevatorTarget = 0;
 
     public Servo elbow;
     public LinearOpMode localLop = null;
@@ -87,14 +55,11 @@ public class ExtraOpModeFunctions
 
     public boolean firstPressed = true;
 
-
-
     public RevColorSensorV3 colorSensor;
     public ColorRangeSensor testColorSensor;
 
     public RevBlinkinLedDriver blinkinLedDriver;
     public RevBlinkinLedDriver.BlinkinPattern pattern;
-
 
     public HardwareMap hm = null;
     public LinearOpMode lop = null;
@@ -105,12 +70,10 @@ public class ExtraOpModeFunctions
     public enum Collect {IDLE, DUMP, WAIT, COLLECT}
     Collect dumpState = Collect.IDLE;
 
-
-    public ExtraOpModeFunctions(HardwareMap hardwareMap, LinearOpMode linearOpMode, FieldSide fieldSide)
+    public ExtraOpModeFunctions(HardwareMap hardwareMap, LinearOpMode linearOpMode)
     {
         hm = hardwareMap;
         lop = linearOpMode;
-        fs = fieldSide;
 
         intake = hardwareMap.get(CRServo.class, "intake");
         intake.setDirection(CRServo.Direction.FORWARD);
@@ -127,10 +90,8 @@ public class ExtraOpModeFunctions
         arm.setTargetPosition(0);
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
+        //PIDFCoefficients pidfCoefficients = new PIDFCoefficients(10.0, 0.05, 0.0, 0.0);
         elevator = hardwareMap.get(DcMotorEx.class, "elevator");
-
-
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(10.0, 0.05, 0.0, 0.0);
         elevator.setDirection(DcMotorEx.Direction.REVERSE);
         elevator.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         elevator.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -205,22 +166,15 @@ public class ExtraOpModeFunctions
         }
     }
 
-
     public void initElevator()
     {
         elevator.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         elevator.setPower(0.2);
         localLop.sleep(600);
         elevator.setPower(0);
-
-
         localLop.telemetry.addData("Limit ", elevatorLimit.getValue());
-        //localLop.telemetry.update();
-
         localLop.sleep(100);
-
         elevator.setPower(-0.1);
-
 
         while(elevatorLimit.isPressed())
         {
@@ -228,22 +182,9 @@ public class ExtraOpModeFunctions
         }
 
         elevator.setPower(0);
-
         elevator.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
         localLop.sleep(250);
-
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-        /*
-        elevatorLeft.setTargetPosition(20);
-        elevatorRight.setTargetPosition(20);
-
-        elevatorLeft.setPower(1.0);
-        elevatorRight.setPower(1.0);
-
-         */
-
         localLop.telemetry.addLine("Elevator Initialized!");
         localLop.telemetry.update();
 
@@ -261,22 +202,9 @@ public class ExtraOpModeFunctions
         }
 
         arm.setPower(0);
-
         arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
         localLop.sleep(250);
-
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-        /*
-        elevatorLeft.setTargetPosition(20);
-        elevatorRight.setTargetPosition(20);
-
-        elevatorLeft.setPower(1.0);
-        elevatorRight.setPower(1.0);
-
-         */
-
         localLop.telemetry.addLine("Arm Initialized!");
         localLop.telemetry.update();
     }
@@ -303,73 +231,73 @@ public class ExtraOpModeFunctions
     public void armExtend()
     {
         armPosition = ArmPosition.EXTEND;
-        target = 1600;
+        elevatorTarget = 1600;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        arm.setTargetPosition(target);
+        arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
     }
     public void armRetract()
     {
         armPosition = ArmPosition.RETRACT;
-        target = 100;
+        elevatorTarget = 100;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        arm.setTargetPosition(target);
+        arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
     }
     public void armHorizontal()
     {
         armPosition = ArmPosition.HORIZONTAL;
-        target = 1400;
+        elevatorTarget = 1400;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        arm.setTargetPosition(target);
+        arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
     }
     public void armVertical()
     {
         armPosition = ArmPosition.VERTICAL;
-        target = 500;
+        elevatorTarget = 500;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        arm.setTargetPosition(target);
+        arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
     }
     public void armHang()
     {
         armPosition = ArmPosition.HANG;
-        target = 0;
+        elevatorTarget = 0;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        arm.setTargetPosition(target);
+        arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
     }
 
     public void elevatorDown()
     {
-        target = 100;
+        elevatorTarget = 100;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
+        elevator.setTargetPosition(elevatorTarget);
         elevator.setPower(1.0);
         firstPressed = true;
     }
     public void elevatorSpecimanGrab()
     {
-        target = 20;
+        elevatorTarget = 20;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
+        elevator.setTargetPosition(elevatorTarget);
         elevator.setPower(1.0);
         firstPressed = true;
     }
     public void elevatorHighBasket()
     {
-        target = 2600;
+        elevatorTarget = 2600;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
+        elevator.setTargetPosition(elevatorTarget);
         elevator.setPower(1.0);
         firstPressed = true;
     }
     public void elevatorHighChamber()
     {
-        target = 1400;
+        elevatorTarget = 1400;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(target);
+        elevator.setTargetPosition(elevatorTarget);
         elevator.setPower(1.0);
         firstPressed = true;
     }

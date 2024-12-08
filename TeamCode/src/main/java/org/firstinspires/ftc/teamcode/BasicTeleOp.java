@@ -352,7 +352,8 @@ public class BasicTeleOp extends LinearOpMode
 
                 //drive.imu.initialize(imuParameters);
                 drive.odo.resetPosAndIMU();
-                extras.saveAutoStartRotation(drive.odo.getHeading()+ PI/2);
+                previousOrientation = drive.odo.getHeading()+ PI/2;
+                extras.saveAutoStartRotation(previousOrientation);
                 sleep(500);
             }
 

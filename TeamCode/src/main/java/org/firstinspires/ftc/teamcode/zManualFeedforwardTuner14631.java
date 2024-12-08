@@ -42,7 +42,7 @@ public class zManualFeedforwardTuner14631 extends LinearOpMode
         double adjustedAngle;
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0), this);
-        ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this, ExtraOpModeFunctions.FieldSide.BLUE);
+        ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
 
         //MultipleTelemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().telemetry);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());

@@ -25,7 +25,7 @@ public class zForwardRampLogger14631 extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0), this);
-        ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this, ExtraOpModeFunctions.FieldSide.BLUE);
+        ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
 
         waitForStart();
 

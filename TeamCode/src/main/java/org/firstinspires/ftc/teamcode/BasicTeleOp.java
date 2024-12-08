@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.PI;
+
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -155,7 +157,8 @@ public class BasicTeleOp extends LinearOpMode
             //adjustedAngle = 0;
             //adjustedAngle = extras.adjustAngleForDriverPosition(drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), ExtraOpModeFunctions.RobotStartPosition.STRAIGHT);
             drive.odo.update();
-            adjustedAngle = drive.odo.getHeading() + (Math.PI / 2);
+            //adjustedAngle = drive.odo.getHeading() + (Math.PI / 2);
+            adjustedAngle = drive.odo.getHeading() + previousOrientation;
             stickSideways = gamepad1.left_stick_x * speedMultiplier;
             stickForward = -gamepad1.left_stick_y * speedMultiplier;
             stickSidewaysRotated = (stickSideways * Math.cos(-adjustedAngle)) - (stickForward * Math.sin(-adjustedAngle));
@@ -348,7 +351,7 @@ public class BasicTeleOp extends LinearOpMode
 
                 //drive.imu.initialize(imuParameters);
                 drive.odo.resetPosAndIMU();
-
+                extras.saveAutoStartRotation(drive.odo.getHeading()+ PI/2);
                 sleep(500);
             }
 

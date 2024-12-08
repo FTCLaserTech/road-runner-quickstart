@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 
+import static java.lang.Math.PI;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -23,8 +25,9 @@ public class SpecimensAuto extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+        double initialRotation = 270;
         //Pose2d purplePixelDropoff = new Pose2d(0,0,0);
-        Pose2d initPose = new Pose2d(0,0,Math.toRadians(270));
+        Pose2d initPose = new Pose2d(0,0,Math.toRadians(initialRotation));
         Pose2d toSubmursible = new Pose2d(-15,29,Math.toRadians(270));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
@@ -73,7 +76,7 @@ public class SpecimensAuto extends LinearOpMode
         // Hang #5
 
         // Save the ending location
-        extras.saveAutoStartRotation(drive.odo.getHeading());
+        extras.saveAutoStartRotation(drive.odo.getHeading()+ initialRotation - PI/2);
     }
 
     public void safeWaitSeconds(double time)

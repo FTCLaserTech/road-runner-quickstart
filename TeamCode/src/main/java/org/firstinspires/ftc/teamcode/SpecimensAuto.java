@@ -6,6 +6,7 @@ import static java.lang.Math.PI;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -29,14 +30,14 @@ public class SpecimensAuto extends LinearOpMode
         Pose2d initPose = new Pose2d(0,0,Math.toRadians(initialRotation));
         Pose2d toSubmursible = new Pose2d(-15,29,Math.toRadians(270));
         Pose2d backUpFromSubmursible = new Pose2d(5,20,Math.toRadians(360));
-        Pose2d lineUpForSweep = new Pose2d(15,24,Math.toRadians(405));
+        Pose2d lineUpForSweep = new Pose2d(14,27,Math.toRadians(405));
         Pose2d sweep = new Pose2d(15,24,Math.toRadians(320));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
 
         //sleep(500);
-        extras.initArm();
+        //extras.initArm();
         extras.tailUp();
 
         telemetry.addLine("Initialized");
@@ -85,7 +86,7 @@ public class SpecimensAuto extends LinearOpMode
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(sweep.position, sweep.heading, new TranslationalVelConstraint(5.0))
+                        .turnTo(320)
                         .build());
 
         sleep(5000);

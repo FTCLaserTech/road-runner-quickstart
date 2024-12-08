@@ -101,7 +101,7 @@ public class BasicTeleOp extends LinearOpMode
         //extras.clawOpen();
 
         double previousOrientation = extras.readAutoStartRotation();
-        extras.tailUp();
+
         telemetry.addData("Previous Orientation: ", previousOrientation);
         telemetry.update();
 

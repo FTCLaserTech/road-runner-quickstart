@@ -229,6 +229,7 @@ public class ExtraOpModeFunctions
         arm.setPower(0);
         arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         localLop.sleep(250);
+        arm.setTargetPosition(0);
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         localLop.telemetry.addLine("Arm Initialized!");
         localLop.telemetry.update();

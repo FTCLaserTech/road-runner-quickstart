@@ -70,6 +70,9 @@ public class ExtraOpModeFunctions
     public enum Collect {IDLE, DUMP, WAIT, COLLECT}
     Collect dumpState = Collect.IDLE;
 
+    public enum SpecimenPickupStates {IDLE, PICKUP, WAIT, DROPTAIL}
+    SpecimenPickupStates specimenPickupState = SpecimenPickupStates.IDLE;
+
     public ExtraOpModeFunctions(HardwareMap hardwareMap, LinearOpMode linearOpMode)
     {
         hm = hardwareMap;
@@ -138,7 +141,6 @@ public class ExtraOpModeFunctions
                 elevatorHighBasket();
                 basketDeliveryState = BasketDelivery.IDLE;
                 break;
-
         }
     }
 
@@ -162,7 +164,31 @@ public class ExtraOpModeFunctions
                 dumper.setPosition(-1.0);
                 dumpState = Collect.IDLE;
                 break;
+        }
+    }
 
+    ElapsedTime specimenPickupStateTimer = new ElapsedTime(MILLISECONDS);
+    public void specimenPickupStateMachine() {
+        switch (specimenPickupState) {
+            case IDLE:
+                //do nothing
+                break;
+            case PICKUP:
+                armVertical();
+                elevatorHighChamber();
+                specimenPickupStateTimer.reset();
+                specimenPickupState = SpecimenPickupStates.WAIT;
+                break;
+            case WAIT:
+                if (dumpStateTimer.milliseconds() > 1000)
+                {
+                    specimenPickupState = SpecimenPickupStates.DROPTAIL;
+                }
+                break;
+            case DROPTAIL:
+                tailDown();
+                specimenPickupState = SpecimenPickupStates.IDLE;
+                break;
         }
     }
 

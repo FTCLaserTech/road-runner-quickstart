@@ -317,12 +317,14 @@ public class BasicTeleOp extends LinearOpMode
 
             if (gamepad2.dpad_up)
             {
-                extras.armVertical();
-                extras.elevatorHighChamber();
-                //extras.tailDown();
-                telemetry.addData("Dpad up", extras.elevator.getTargetPosition());
-                telemetry.addData("Dpad up", extras.elevator.getPower());
+                gp2_dpad_up_pressed = true;
             }
+            else if(!gamepad2.dpad_up && gp2_dpad_up_pressed)
+            {
+                gp2_dpad_up_pressed = false;
+                extras.specimenPickupState = ExtraOpModeFunctions.SpecimenPickupStates.PICKUP;
+            }
+            extras.specimenPickupStateMachine();;
 
             if (gamepad2.dpad_down)
             {

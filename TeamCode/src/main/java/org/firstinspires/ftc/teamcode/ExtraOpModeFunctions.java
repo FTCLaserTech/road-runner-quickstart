@@ -218,7 +218,7 @@ public class ExtraOpModeFunctions
     {
         arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         arm.setPower(-0.1);
-        arm.setCurrentAlert(5, CurrentUnit.AMPS);
+        arm.setCurrentAlert(4, CurrentUnit.AMPS);
 
         while(!arm.isOverCurrent())
         {

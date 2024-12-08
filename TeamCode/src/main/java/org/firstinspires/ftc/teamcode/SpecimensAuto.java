@@ -37,6 +37,7 @@ public class SpecimensAuto extends LinearOpMode
 
         //sleep(500);
         extras.initArm();
+        extras.tailUp();
 
         telemetry.addLine("Initialized");
         telemetry.addData("x", drive.pose.position.x);

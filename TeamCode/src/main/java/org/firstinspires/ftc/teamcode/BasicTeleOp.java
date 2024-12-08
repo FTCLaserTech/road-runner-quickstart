@@ -101,6 +101,7 @@ public class BasicTeleOp extends LinearOpMode
         //extras.clawOpen();
 
         double previousOrientation = extras.readAutoStartRotation();
+        extras.tailUp();
         telemetry.addData("Previous Orientation: ", previousOrientation);
         telemetry.update();
 
@@ -410,7 +411,7 @@ public class BasicTeleOp extends LinearOpMode
                 extras.tailDown();
             }
 
-            if(gamepad2.y)
+            if(gamepad2.y && !gamepad2.back)
             {
                 gp2_y_pressed = true;
             }

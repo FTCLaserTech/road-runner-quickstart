@@ -241,10 +241,10 @@ public class ExtraOpModeFunctions
     }
 
     public void intakeIn() {
-        intake.setPower(-1);
+        intake.setPower(1);
     }
     public void intakeOut() {
-        intake.setPower(1);
+        intake.setPower(-1);
     }
     public void intakeOff()
     {

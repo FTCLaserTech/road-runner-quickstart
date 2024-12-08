@@ -36,7 +36,7 @@ public class SpecimensAuto extends LinearOpMode
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
 
         //sleep(500);
-        //extras.initElevator();
+        extras.initArm();
 
         telemetry.addLine("Initialized");
         telemetry.addData("x", drive.pose.position.x);

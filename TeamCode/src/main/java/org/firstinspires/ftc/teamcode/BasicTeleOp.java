@@ -476,7 +476,8 @@ public class BasicTeleOp extends LinearOpMode
             //telemetry.addData("y", drive.pose.position.y);
             //telemetry.addData("heading", drive.pose.heading.real);
 
-            telemetry.addData("ODO angle", adjustedAngle);
+            telemetry.addData("ODO heading", drive.odo.getHeading());
+            telemetry.addData("ODO adjusted angle", adjustedAngle);
             //telemetry.addData("IMU angle", drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
 
             //Pose2D pos = drive.odo.getPosition();

@@ -31,7 +31,6 @@ public class SamplesAuto extends LinearOpMode
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
 
-        //sleep(500);
         //extras.initArm();
 
         telemetry.addLine("Initialized");
@@ -43,7 +42,6 @@ public class SamplesAuto extends LinearOpMode
         while (!isStopRequested() && !opModeIsActive())
         {
             safeWaitSeconds(0.010);
-            //sleep(10);
         }
 
         // put the preloaded sample in the high basket
@@ -66,7 +64,6 @@ public class SamplesAuto extends LinearOpMode
                         new SleepAction(1),
                         new InstantAction(() -> extras.samplePickup()),
                         new SleepAction(5)
-
                 )
         ));
 
@@ -89,7 +86,7 @@ public class SamplesAuto extends LinearOpMode
                         new SleepAction(5.0)
                 )
         ));
-        sleep(5000);
+        safeWaitSeconds(5000);
 
         //pick up the 1st sample on the field and put it in the high basket
 
@@ -107,7 +104,9 @@ public class SamplesAuto extends LinearOpMode
     {
         ElapsedTime timer = new ElapsedTime(SECONDS);
         timer.reset();
-        while (!isStopRequested() && timer.time() < time) {
+        while (!isStopRequested() && timer.time() < time)
+        {
+            ;
         }
     }
 }

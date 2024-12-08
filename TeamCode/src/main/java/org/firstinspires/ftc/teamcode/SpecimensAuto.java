@@ -38,7 +38,6 @@ public class SpecimensAuto extends LinearOpMode
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
 
-        //sleep(500);
         //extras.initArm();
         extras.tailUp();
 
@@ -50,7 +49,7 @@ public class SpecimensAuto extends LinearOpMode
 
         while (!isStopRequested() && !opModeIsActive())
         {
-            sleep(10);
+            safeWaitSeconds(10);
         }
 
         // hang pre-loaded sample in the high chamber
@@ -71,7 +70,7 @@ public class SpecimensAuto extends LinearOpMode
                 )
         ));
 
-        sleep(1000);
+        safeWaitSeconds(1000);
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -93,7 +92,7 @@ public class SpecimensAuto extends LinearOpMode
                         .turnTo(320)
                         .build());
 
-        sleep(5000);
+        safeWaitSeconds(5000);
 
 
         // Hang #2
@@ -112,7 +111,9 @@ public class SpecimensAuto extends LinearOpMode
     {
         ElapsedTime timer = new ElapsedTime(SECONDS);
         timer.reset();
-        while (!isStopRequested() && timer.time() < time) {
+        while (!isStopRequested() && timer.time() < time)
+        {
+            ;
         }
     }
 }

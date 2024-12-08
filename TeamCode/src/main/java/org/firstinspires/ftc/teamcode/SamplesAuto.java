@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 
+import static java.lang.Math.PI;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -23,8 +25,8 @@ public class SamplesAuto extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        Pose2d initPose = new Pose2d(0,0, Math.toRadians(90));
-        Pose2d toPole = new Pose2d(-15,10, Math.toRadians(45));
+        double initialRotation = 90;
+        Pose2d initPose = new Pose2d(0,0, Math.toRadians(initialRotation));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
@@ -45,7 +47,11 @@ public class SamplesAuto extends LinearOpMode
         }
 
         // put the preloaded sample in the high basket
+        Pose2d nearPole = new Pose2d(-15,4, Math.toRadians(90));
+        Pose2d toPole = new Pose2d(-19,6, Math.toRadians(45));
         Action DriveToBasketPole = drive.actionBuilder(drive.pose)
+                .strafeToLinearHeading(nearPole.position, nearPole.heading, new TranslationalVelConstraint(15.0))
+                .turnTo(45)
                 .strafeToLinearHeading(toPole.position, toPole.heading, new TranslationalVelConstraint(15.0))
                 .build();
 
@@ -55,11 +61,34 @@ public class SamplesAuto extends LinearOpMode
                         new SleepAction(0),
                         new InstantAction(() -> extras.armVertical()),
                         new InstantAction(() -> extras.elevatorHighBasket()),
-                        new SleepAction(5),
-                        new InstantAction(() -> extras.sampleDump())
+                        new SleepAction(3),
+                        new InstantAction(() -> extras.sampleDump()),
+                        new SleepAction(1),
+                        new InstantAction(() -> extras.samplePickup()),
+                        new SleepAction(5)
+
                 )
         ));
 
+        drive.updatePoseEstimate();
+
+        Pose2d toFirstSample = new Pose2d(19,10, Math.toRadians(45));
+        Action DriveToFirstSample = drive.actionBuilder(drive.pose)
+                .strafeToLinearHeading(toFirstSample.position, toFirstSample.heading, new TranslationalVelConstraint(15.0))
+                .turnTo(155)
+                //.strafeToLinearHeading(toPole.position, toPole.heading, new TranslationalVelConstraint(15.0))
+                .build();
+
+        Actions.runBlocking(new ParallelAction(
+                DriveToFirstSample,
+                new SequentialAction(
+                        new SleepAction(2),
+                        new InstantAction(() -> extras.elevatorDown()),
+                        new SleepAction(3),
+                        new InstantAction(() -> extras.armExtend()),
+                        new SleepAction(5.0)
+                )
+        ));
         sleep(5000);
 
         //pick up the 1st sample on the field and put it in the high basket
@@ -71,7 +100,7 @@ public class SamplesAuto extends LinearOpMode
         //Park
 
         // Save the ending location
-        extras.saveAutoStartRotation(drive.odo.getHeading());
+        extras.saveAutoStartRotation(drive.odo.getHeading() + initialRotation - PI/2);
     }
 
     public void safeWaitSeconds(double time)

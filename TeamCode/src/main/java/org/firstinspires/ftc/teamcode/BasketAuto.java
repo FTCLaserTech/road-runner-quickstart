@@ -67,7 +67,22 @@ public class BasketAuto extends LinearOpMode
                 )
         ));
 
+        telemetry.addLine("Before updatePoseEstimate");
+        telemetry.addData("x", drive.pose.position.x);
+        telemetry.addData("y", drive.pose.position.y);
+        telemetry.addData("heading", drive.pose.heading);
+        telemetry.update();
+
+        safeWaitSeconds(5);
         drive.updatePoseEstimate();
+
+        telemetry.addLine("After updatePoseEstimate");
+        telemetry.addData("x", drive.pose.position.x);
+        telemetry.addData("y", drive.pose.position.y);
+        telemetry.addData("heading", drive.pose.heading);
+        telemetry.update();
+
+        safeWaitSeconds(5);
 
         Pose2d toFirstSample = new Pose2d(19,14, Math.toRadians(45));
         Action DriveToFirstSample = drive.actionBuilder(drive.pose)

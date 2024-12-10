@@ -182,7 +182,7 @@ public class ExtraOpModeFunctions
                 specimenPickupState = SpecimenPickupStates.WAIT;
                 break;
             case WAIT:
-                if (dumpStateTimer.milliseconds() > 1000)
+                if (specimenPickupStateTimer.milliseconds() > 1000)
                 {
                     specimenPickupState = SpecimenPickupStates.DROPTAIL;
                 }
@@ -230,8 +230,8 @@ public class ExtraOpModeFunctions
         }
 
         arm.setPower(0);
+        localLop.sleep(400);
         arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        localLop.sleep(250);
         arm.setTargetPosition(0);
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         localLop.telemetry.addLine("Arm Initialized!");
@@ -260,7 +260,7 @@ public class ExtraOpModeFunctions
     public void armExtend()
     {
         armPosition = ArmPosition.EXTEND;
-        elevatorTarget = 1620;
+        elevatorTarget = 1800;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -268,7 +268,7 @@ public class ExtraOpModeFunctions
     public void armRetract()
     {
         armPosition = ArmPosition.RETRACT;
-        elevatorTarget = 100;
+        elevatorTarget = 177;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -276,7 +276,7 @@ public class ExtraOpModeFunctions
     public void armHorizontal()
     {
         armPosition = ArmPosition.HORIZONTAL;
-        elevatorTarget = 1400;
+        elevatorTarget = 1600;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -284,7 +284,7 @@ public class ExtraOpModeFunctions
     public void armVertical()
     {
         armPosition = ArmPosition.VERTICAL;
-        elevatorTarget = 500;
+        elevatorTarget = 625;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);

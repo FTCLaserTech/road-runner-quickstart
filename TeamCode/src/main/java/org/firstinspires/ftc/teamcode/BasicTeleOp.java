@@ -327,7 +327,7 @@ public class BasicTeleOp extends LinearOpMode
             {
                 extras.armVertical();
                 extras.elevatorDown();
-                //extras.tailUp();
+                extras.tailUp();
                 telemetry.addData("Dpad down", extras.elevator.getTargetPosition());
                 telemetry.addData("Dpad down", extras.elevator.getPower());
             }
@@ -366,7 +366,7 @@ public class BasicTeleOp extends LinearOpMode
             {
                 gp2_bx_pressed = true;
             }
-            else if (!gamepad2.y && gp2_bx_pressed)
+            else if (!gamepad2.x && gp2_bx_pressed)
             {
                 extras.initArm();
                 gp2_bx_pressed = false;
@@ -419,7 +419,7 @@ public class BasicTeleOp extends LinearOpMode
 
             extras.basketDeliveryStateMachine();
 
-            if(gamepad2.x)
+            if ((!gamepad2.back) && (gamepad2.x))
             {
                 gp2_x_pressed = true;
             }

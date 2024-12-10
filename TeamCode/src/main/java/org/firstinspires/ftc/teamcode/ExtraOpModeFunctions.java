@@ -38,10 +38,13 @@ public class ExtraOpModeFunctions
 {
     public enum RobotStartPosition {STRAIGHT, LEFT, RIGHT};
 
-    public enum ElevatorPosition {COLLECT, GROUND, LOW, MIDDLE, HIGH, TWO, THREE, FOUR, FIVE}
+    public enum ElevatorPosition {INIT, DOWN, HIGH_CHAMBER, HIGH_BASKET, LOW_BASKET, LOW_CHAMBER}
+    public ElevatorPosition elevatorPosition = ElevatorPosition.INIT;
+
     public static final double PI = 3.14159265;
 
     public int elevatorTarget = 0;
+    int elevatorResetCounter = 0;
 
     public Servo elbow;
     public LinearOpMode localLop = null;
@@ -99,7 +102,7 @@ public class ExtraOpModeFunctions
         elevator.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         elevator.setTargetPosition(0);
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
+        elevator.setCurrentAlert(6, CurrentUnit.AMPS);
         elevatorLimit = hardwareMap.get(TouchSensor.class, "elevatorLimit");
 
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
@@ -297,19 +300,11 @@ public class ExtraOpModeFunctions
 
     public void elevatorDown()
     {
-        elevatorTarget = 100;
+        elevatorTarget = 10;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(elevatorTarget);
         elevator.setPower(1.0);
-        firstPressed = true;
-    }
-    public void elevatorSpecimanGrab()
-    {
-        elevatorTarget = 20;
-        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(elevatorTarget);
-        elevator.setPower(1.0);
-        firstPressed = true;
+        elevatorPosition = ElevatorPosition.DOWN;
     }
     public void elevatorHighBasket()
     {
@@ -317,7 +312,7 @@ public class ExtraOpModeFunctions
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(elevatorTarget);
         elevator.setPower(1.0);
-        firstPressed = true;
+        elevatorPosition = ElevatorPosition.HIGH_BASKET;
     }
     public void elevatorHighChamber()
     {
@@ -325,7 +320,27 @@ public class ExtraOpModeFunctions
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(elevatorTarget);
         elevator.setPower(1.0);
-        firstPressed = true;
+        elevatorPosition = ElevatorPosition.HIGH_CHAMBER;
+    }
+
+    public void elevatorMonitor()
+    {
+        if(elevator.isOverCurrent())
+        {
+            elevatorResetCounter += 1;
+            firstPressed = false;
+            elevator.setPower(0);
+            elevator.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        if((!elevatorLimit.isPressed()) && firstPressed && (elevatorPosition==ElevatorPosition.DOWN))
+        {
+            firstPressed = false;
+            elevator.setPower(0);
+        }
+        if((elevatorLimit.isPressed()) && (!firstPressed))
+        {
+            firstPressed = true;
+        }
     }
 
     public void elevatorOff()

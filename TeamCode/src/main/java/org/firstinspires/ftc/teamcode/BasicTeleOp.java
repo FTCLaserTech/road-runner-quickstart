@@ -93,7 +93,6 @@ public class BasicTeleOp extends LinearOpMode
         double elevatorCurrent = 0;
         double elevatorMaxCurrent = 0;
         int numDangerElevatorAmps = 0;
-        int elevatorResetCounter = 0;
 
         //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -296,13 +295,7 @@ public class BasicTeleOp extends LinearOpMode
             */
             drive.updatePoseEstimate();
 
-            if((!extras.elevatorLimit.isPressed()) && extras.firstPressed)
-            {
-                elevatorResetCounter += 1;
-                extras.firstPressed = false;
-                extras.elevator.setPower(0);
-                extras.elevator.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            }
+            extras.elevatorMonitor();
 
             if (gamepad2.a)
             {
@@ -333,7 +326,7 @@ public class BasicTeleOp extends LinearOpMode
             if (gamepad2.dpad_down)
             {
                 extras.armVertical();
-                extras.elevatorSpecimanGrab();
+                extras.elevatorDown();
                 //extras.tailUp();
                 telemetry.addData("Dpad down", extras.elevator.getTargetPosition());
                 telemetry.addData("Dpad down", extras.elevator.getPower());
@@ -484,7 +477,7 @@ public class BasicTeleOp extends LinearOpMode
             telemetry.addData("Elevator Current: ", elevatorCurrent);
             telemetry.addData("Elevator Max Current: ", elevatorMaxCurrent);
             telemetry.addData("Elevator limit: ", extras.elevatorLimit.isPressed());
-            telemetry.addData("Elevator Resets: ", elevatorResetCounter);
+            telemetry.addData("Elevator Resets: ", extras.elevatorResetCounter);
 
             telemetry.addData("Elapsed time: ", getRuntime());
 

@@ -66,7 +66,7 @@ public class SpecimensAuto extends LinearOpMode
                         new InstantAction(() -> extras.armVertical()),
                         new InstantAction(() -> extras.elevatorHighChamber()),
                         new SleepAction(3),
-                        new InstantAction(() -> extras.elevatorSpecimanGrab())
+                        new InstantAction(() -> extras.elevatorDown())
                 )
         ));
 

@@ -86,7 +86,7 @@ public class SamplesAuto extends LinearOpMode
                         new SleepAction(5.0)
                 )
         ));
-        safeWaitSeconds(5000);
+        safeWaitSeconds(5);
 
         //pick up the 1st sample on the field and put it in the high basket
 

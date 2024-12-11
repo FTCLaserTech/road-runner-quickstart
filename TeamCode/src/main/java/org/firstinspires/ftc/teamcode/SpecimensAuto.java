@@ -42,10 +42,10 @@ public class SpecimensAuto extends LinearOpMode
         Pose2d sweep2 = new Pose2d(47,10,Math.toRadians(270));
         Pose2d backTo2 = new Pose2d(47,52,Math.toRadians(270));
         Pose2d slideOver3 = new Pose2d(53,52,Math.toRadians(270));
-        Pose2d sweep3 = new Pose2d(55,10,Math.toRadians(270));
-        Pose2d lineUpForWallSlide = new Pose2d(20,5,Math.toRadians(180));
-        Pose2d wallSlide = new Pose2d(55,5,Math.toRadians(180));
-        Pose2d toSubmursible2 = new Pose2d(-14,29,Math.toRadians(270));
+        Pose2d sweep3 = new Pose2d(55,12,Math.toRadians(270));
+        Pose2d lineUpForWallSlide = new Pose2d(20,0,Math.toRadians(180));
+        Pose2d wallSlide = new Pose2d(55,0,Math.toRadians(180));
+        Pose2d toSubmursible2 = new Pose2d(-12,29,Math.toRadians(270));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
@@ -66,7 +66,7 @@ public class SpecimensAuto extends LinearOpMode
 
         // hang pre-loaded sample in the high chamber
         Action DriveToNearSubmursibleAction = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(30.0))
+                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(50.0))
                 // move to submersible
                 //.strafeToLinearHeading(new Vector2d(-15,29), Rotation2d.exp(270), new TranslationalVelConstraint(15.0))
                 .build();
@@ -121,7 +121,7 @@ public class SpecimensAuto extends LinearOpMode
                         new SleepAction(0),
                         new InstantAction(() -> extras.armVertical()),
                         new InstantAction(() -> extras.elevatorHighChamber()),
-                        new SleepAction(3),
+                        new SleepAction(6),
                         new InstantAction(() -> extras.elevatorDown())
                 )
         ));

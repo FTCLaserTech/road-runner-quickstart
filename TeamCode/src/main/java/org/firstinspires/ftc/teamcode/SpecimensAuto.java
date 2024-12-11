@@ -42,7 +42,10 @@ public class SpecimensAuto extends LinearOpMode
         Pose2d sweep2 = new Pose2d(47,10,Math.toRadians(270));
         Pose2d backTo2 = new Pose2d(47,52,Math.toRadians(270));
         Pose2d slideOver3 = new Pose2d(53,52,Math.toRadians(270));
-        Pose2d sweep3 = new Pose2d(53,10,Math.toRadians(270));
+        Pose2d sweep3 = new Pose2d(55,10,Math.toRadians(270));
+        Pose2d lineUpForWallSlide = new Pose2d(20,5,Math.toRadians(180));
+        Pose2d wallSlide = new Pose2d(55,5,Math.toRadians(180));
+        Pose2d toSubmursible2 = new Pose2d(-14,29,Math.toRadians(270));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
@@ -66,7 +69,7 @@ public class SpecimensAuto extends LinearOpMode
                 .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(30.0))
                 // move to submersible
                 //.strafeToLinearHeading(new Vector2d(-15,29), Rotation2d.exp(270), new TranslationalVelConstraint(15.0))
-                        .build();
+                .build();
 
         Actions.runBlocking(new ParallelAction(
                 DriveToNearSubmursibleAction,
@@ -83,57 +86,48 @@ public class SpecimensAuto extends LinearOpMode
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(backUpFromSubmursible.position, backUpFromSubmursible.heading, new TranslationalVelConstraint(40.0))
+                        .strafeToLinearHeading(backUpFromSubmursible.position, backUpFromSubmursible.heading, new TranslationalVelConstraint(50.0))
+                        .strafeToLinearHeading(lineUpForSweep.position, lineUpForSweep.heading, new TranslationalVelConstraint(50.0))
+                        .strafeToLinearHeading(slideOver1.position, slideOver1.heading, new TranslationalVelConstraint(50.0))
+                        .strafeToLinearHeading(sweep.position, sweep.heading, new TranslationalVelConstraint(50.0))
+                        .strafeToLinearHeading(backTo1.position, backTo1.heading, new TranslationalVelConstraint(50.0))
+                        .strafeToLinearHeading(slideOver2.position, slideOver2.heading, new TranslationalVelConstraint(50.0))
+                        .strafeToLinearHeading(sweep2.position, sweep2.heading, new TranslationalVelConstraint(50.0))
+                        .strafeToLinearHeading(backTo2.position, backTo2.heading, new TranslationalVelConstraint(50.0))
+                        .strafeToLinearHeading(slideOver3.position, slideOver3.heading, new TranslationalVelConstraint(50.0))
+                        .strafeToLinearHeading(sweep3.position, sweep3.heading, new TranslationalVelConstraint(50.0))
                         .build());
 
-        Action lineUpToSweepAction = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(lineUpForSweep.position, lineUpForSweep.heading, new TranslationalVelConstraint(40.0))
+
+
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                        .strafeToLinearHeading(lineUpForWallSlide.position, lineUpForWallSlide.heading, new TranslationalVelConstraint(15.0))
+                        .build());
+
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                        .strafeToLinearHeading(wallSlide.position, wallSlide.heading, new TranslationalVelConstraint(15.0))
+                        .build());
+
+        Action DriveToNearSubmursibleAction2 = drive.actionBuilder(drive.pose)
+                .strafeToLinearHeading(toSubmursible2.position, toSubmursible2.heading, new TranslationalVelConstraint(15.0))
+                // move to submersible
                 .build();
 
         Actions.runBlocking(new ParallelAction(
-                        lineUpToSweepAction
+                DriveToNearSubmursibleAction2,
+                new SequentialAction(
+                        new SleepAction(0),
+                        new InstantAction(() -> extras.armVertical()),
+                        new InstantAction(() -> extras.elevatorHighChamber()),
+                        new SleepAction(3),
+                        new InstantAction(() -> extras.elevatorDown())
                 )
-        );
+        ));
 
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(slideOver1.position, slideOver1.heading, new TranslationalVelConstraint(40.0))
-                        .build());
+        safeWaitSeconds(1);
 
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(sweep.position, sweep.heading, new TranslationalVelConstraint(40.0))
-                        .build());
-
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(backTo1.position, backTo1.heading, new TranslationalVelConstraint(40.0))
-                        .build());
-
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(slideOver2.position, slideOver2.heading, new TranslationalVelConstraint(40.0))
-                        .build());
-
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(sweep2.position, sweep2.heading, new TranslationalVelConstraint(40.0))
-                        .build());
-
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(backTo2.position, backTo2.heading, new TranslationalVelConstraint(40.0))
-                        .build());
-
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(slideOver3.position, slideOver3.heading, new TranslationalVelConstraint(40.0))
-                        .build());
-
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(sweep3.position, sweep3.heading, new TranslationalVelConstraint(40.0))
-                        .build());
 
         /*
         Actions.runBlocking(

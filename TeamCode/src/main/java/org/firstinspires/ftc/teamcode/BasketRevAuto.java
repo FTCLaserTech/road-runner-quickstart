@@ -1,3 +1,5 @@
+package org.firstinspires.ftc.teamcode;
+
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 import static java.lang.Math.PI;
 
@@ -17,9 +19,6 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.ExtraOpModeFunctions;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 import java.util.Arrays;
 
@@ -80,13 +79,12 @@ public class BasketRevAuto extends LinearOpMode
         ));
 
         safeWaitSeconds(0.5);
-        drive.updatePoseEstimate();
+        //drive.updatePoseEstimate();
 
-
+        // 1st sample: drive to and turn on intake
         Pose2d toFirstSample = new Pose2d(12,16, Math.toRadians(135));
         Action DriveToFirstSample = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(toFirstSample.position, toFirstSample.heading, new TranslationalVelConstraint(20.0))
-                //.strafeToLinearHeading(toPole.position, toPole.heading, new TranslationalVelConstraint(15.0))
                 .build();
 
         Actions.runBlocking(new ParallelAction(
@@ -98,20 +96,16 @@ public class BasketRevAuto extends LinearOpMode
                         new InstantAction(() -> extras.armExtend()),
                         new SleepAction(0.5),
                         new InstantAction(() -> extras.intakeIn())
-
-
                 )
-
         ));
 
         safeWaitSeconds(1);
-        drive.updatePoseEstimate();
+        //drive.updatePoseEstimate();
 
+        // 1st sample: pick up the first sample by driving into it
         Pose2d firstsample = new Pose2d(8,19, Math.toRadians(135));
         Action FirstSampleAction = drive.actionBuilder(drive.pose)
                 .strafeToConstantHeading(firstsample.position, new TranslationalVelConstraint(10.0))
-               // .strafeToLinearHeading(firstsample.position, firstsample.heading, new TranslationalVelConstraint(15.0))
-                //.strafeToLinearHeading(toPole.position, toPole.heading, new TranslationalVelConstraint(15.0))
                 .build();
 
         Actions.runBlocking(new ParallelAction(
@@ -121,10 +115,9 @@ public class BasketRevAuto extends LinearOpMode
                         new InstantAction(() -> extras.intakeOff()),
                         new SleepAction(1.0)
                 )
-
-
         ));
 
+        //1st sample: move to the basket and put it in the basket
         Pose2d toPole2 = new Pose2d(-20.5,6, Math.toRadians(45));
         Pose2d nearPole2 = new Pose2d(-20.5,6, Math.toRadians(45));
         Action DriveToPole = drive.actionBuilder(drive.pose)
@@ -146,14 +139,9 @@ public class BasketRevAuto extends LinearOpMode
                         new SleepAction(1),
                         new InstantAction(() -> extras.samplePickup()),
                         new SleepAction(0.5)
-
                 )));
 
-
-
         safeWaitSeconds(5);
-
-        //pick up the 1st sample on the field and put it in the high basket
 
         //pick up the 2nd sample on the field and put it in the high basket
 

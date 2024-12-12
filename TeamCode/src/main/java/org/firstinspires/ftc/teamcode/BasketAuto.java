@@ -64,6 +64,7 @@ public class BasketAuto extends LinearOpMode
         Pose2d toPole = new Pose2d(-19,6, Math.toRadians(45));
         Action DriveToBasketPole = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(nearPole.position, nearPole.heading, baseVelConstraint)
+                .waitSeconds(2.0)
                 //.turnTo(45)
                 .strafeToLinearHeading(toPole.position, toPole.heading, baseVelConstraint, new ProfileAccelConstraint(-40,40))
                 .build();
@@ -103,7 +104,7 @@ public class BasketAuto extends LinearOpMode
 
         safeWaitSeconds(2);
 
-
+        /*
         Pose2d toFirstSample = new Pose2d(19,14, Math.toRadians(45));
         Action DriveToFirstSample = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(toFirstSample.position, toFirstSample.heading, new TranslationalVelConstraint(15.0))
@@ -140,7 +141,7 @@ public class BasketAuto extends LinearOpMode
         drive.odo.update();
         telemetry.addData("ODO heading", drive.odo.getHeading());
         telemetry.update();
-/*
+
         Pose2d firstsample = new Pose2d(15,18, Math.toRadians(90));
         Action FirstSampleAction = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(firstsample.position, firstsample.heading, new TranslationalVelConstraint(15.0))

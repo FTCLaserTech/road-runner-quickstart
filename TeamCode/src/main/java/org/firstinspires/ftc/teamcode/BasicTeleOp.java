@@ -214,6 +214,23 @@ public class BasicTeleOp extends LinearOpMode
             }
 
 
+            //extend lift
+            if (gamepad2.right_bumper)
+            {
+                extras.liftExtend();
+            }
+            //retract lift
+            else if (gamepad2.right_trigger > 0 && !gamepad2.start)
+            {
+                extras.liftRetract();
+            }
+            //turn lift off
+            else
+            {
+                extras.liftOff();
+            }
+
+
             /*
             slope = -elevMultMin / elevHeightMax;
             elevatorEncoderCounts = (extras.elevator.getCurrentPosition());
@@ -303,14 +320,6 @@ public class BasicTeleOp extends LinearOpMode
                 extras.armHorizontal();
                 extras.tailUp();
             }
-            /*
-            if (gamepad2.y)
-            {
-                extras.elevatorHighBasket();
-                telemetry.addData("Dpad up", extras.elevator.getTargetPosition());
-                telemetry.addData("Dpad up", extras.elevator.getPower());
-            }
-            */
 
             if (gamepad2.dpad_up)
             {
@@ -449,10 +458,6 @@ public class BasicTeleOp extends LinearOpMode
                 }
             }
 
-            if(gamepad2.right_bumper)
-            {
-                extras.armHang();
-            }
 
             //telemetry.addData("x", drive.pose.position.x);
             //telemetry.addData("y", drive.pose.position.y);
@@ -468,6 +473,7 @@ public class BasicTeleOp extends LinearOpMode
 
             //telemetry.addLine();
 
+            telemetry.addData("Lift Counts: ", extras.lift.getCurrentPosition());
             telemetry.addData("Arm Encoder Counts: ", extras.arm.getCurrentPosition());
             telemetry.addData("Arm Target Counts: ", extras.arm.getTargetPosition());
             telemetry.addData("Arm Current: ", armCurrent);

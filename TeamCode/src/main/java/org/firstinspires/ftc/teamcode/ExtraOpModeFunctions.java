@@ -55,6 +55,9 @@ public class ExtraOpModeFunctions
     public TouchSensor elevatorLimit;
     public Servo tail;
     public Servo dumper;
+    public DcMotorEx lift;
+
+
 
     public boolean firstPressed = true;
 
@@ -87,6 +90,12 @@ public class ExtraOpModeFunctions
         tail = hardwareMap.get(Servo.class, "tail");
 
         dumper = hardwareMap.get(Servo.class, "dumper");
+
+        lift = hardwareMap.get(DcMotorEx.class, "lift");
+        lift.setDirection(DcMotorEx.Direction.FORWARD);
+        lift.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+
 
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         arm.setDirection(DcMotorEx.Direction.FORWARD);
@@ -134,7 +143,7 @@ public class ExtraOpModeFunctions
                 basketDeliveryState = BasketDelivery.WAIT2;
                 break;
             case WAIT2:
-                if (basketDeliveryStateTimer.milliseconds() > 1000) {
+                if (basketDeliveryStateTimer.milliseconds() > 400) {
                     basketDeliveryState = BasketDelivery.INTAKEOFF;
                 }
                 break;
@@ -220,7 +229,7 @@ public class ExtraOpModeFunctions
     public void initArm()
     {
         arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        arm.setPower(-0.1);
+        arm.setPower(-0.35);
         arm.setCurrentAlert(4, CurrentUnit.AMPS);
 
         while(!arm.isOverCurrent())
@@ -236,6 +245,15 @@ public class ExtraOpModeFunctions
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         localLop.telemetry.addLine("Arm Initialized!");
         localLop.telemetry.update();
+    }
+
+
+
+
+    public void liftExtend() { lift.setPower(1.0); }
+    public void liftRetract() { lift.setPower(-1.0); }
+    public void liftOff() {
+        lift.setPower(0);
     }
 
     public void elbowMove (int distance)
@@ -254,13 +272,13 @@ public class ExtraOpModeFunctions
         intake.setPower(0);
     }
 
-    public enum ArmPosition {STOP, EXTEND, RETRACT, HORIZONTAL, VERTICAL,HANG}
+    public enum ArmPosition {STOP, EXTEND, RETRACT, HORIZONTAL, VERTICAL, HANG1, HANG2}
     ArmPosition armPosition = ArmPosition.STOP;
 
     public void armExtend()
     {
         armPosition = ArmPosition.EXTEND;
-        elevatorTarget = 1830;
+        elevatorTarget = 1850;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -289,10 +307,19 @@ public class ExtraOpModeFunctions
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
     }
-    public void armHang()
+    public void armHang1()
     {
-        armPosition = ArmPosition.HANG;
-        elevatorTarget = 0;
+        armPosition = ArmPosition.HANG1;
+        elevatorTarget = 850;
+        arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        arm.setTargetPosition(elevatorTarget);
+        arm.setPower(1.0);
+    }
+
+    public void armHang2()
+    {
+        armPosition = ArmPosition.HANG2;
+        elevatorTarget = 750;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);

@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
-
 import static java.lang.Math.PI;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.AngularVelConstraint;
-import com.acmerobotics.roadrunner.CompositeVelConstraint;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -17,14 +14,12 @@ import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
-import com.acmerobotics.roadrunner.TurnConstraints;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 @Config
@@ -35,11 +30,12 @@ public class BasketAuto extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        double initialRotation = 90;
+        double initialRotation = 270;
         Pose2d initPose = new Pose2d(0,0, Math.toRadians(initialRotation));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
+        drive.PARAMS.headingGain = 7.0;
 
         extras.initArm();
 
@@ -58,14 +54,16 @@ public class BasketAuto extends LinearOpMode
 
         // put the preloaded sample in the high basket
         VelConstraint baseVelConstraint=new MinVelConstraint(Arrays.asList(
-                new TranslationalVelConstraint(15.0),
-                new AngularVelConstraint(Math.toRadians(45))));
-        Pose2d nearPole = new Pose2d(-15,4, Math.toRadians(90));
-        Pose2d toPole = new Pose2d(-19,6, Math.toRadians(45));
+                new TranslationalVelConstraint(20.0),
+                new AngularVelConstraint(Math.toRadians(100))));
+
+
+
+
+        Pose2d nearPole = new Pose2d(-15,4, Math.toRadians(270));
+        Pose2d toPole = new Pose2d(-20.5,6, Math.toRadians(405));
         Action DriveToBasketPole = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(nearPole.position, nearPole.heading, baseVelConstraint)
-                .waitSeconds(2.0)
-                //.turnTo(45)
                 .strafeToLinearHeading(toPole.position, toPole.heading, baseVelConstraint, new ProfileAccelConstraint(-40,40))
                 .build();
 
@@ -74,42 +72,25 @@ public class BasketAuto extends LinearOpMode
                 new SequentialAction(
                         new SleepAction(0),
                         new InstantAction(() -> extras.armVertical()),
+                        new SleepAction(1.6),
                         new InstantAction(() -> extras.elevatorHighBasket()),
-                        new SleepAction(3),
+                        new SleepAction(1.8),
                         new InstantAction(() -> extras.sampleDump()),
-                        new SleepAction(1),
+                        new SleepAction(1.0),
                         new InstantAction(() -> extras.samplePickup()),
-                        new SleepAction(2)
+                        new SleepAction(0.5)
                 )
         ));
 
-        telemetry.addLine("Before 1 updatePoseEstimate");
-        telemetry.addData("x", drive.pose.position.x);
-        telemetry.addData("y", drive.pose.position.y);
-        telemetry.addData("heading",Math.toDegrees(drive.pose.heading.toDouble()));
-        drive.odo.update();
-        telemetry.addData("ODO heading", drive.odo.getHeading());
-        telemetry.update();
 
-        safeWaitSeconds(2);
-        drive.updatePoseEstimate();
 
-        telemetry.addLine("After 1 updatePoseEstimate");
-        telemetry.addData("x", drive.pose.position.x);
-        telemetry.addData("y", drive.pose.position.y);
-        telemetry.addData("heading",Math.toDegrees(drive.pose.heading.toDouble()));
-        drive.odo.update();
-        telemetry.addData("ODO heading", drive.odo.getHeading());
-        telemetry.update();
 
-        safeWaitSeconds(2);
+        //drive.updatePoseEstimate();
 
-        /*
-        Pose2d toFirstSample = new Pose2d(19,14, Math.toRadians(45));
+        // 1st sample: drive to and turn on intake
+        Pose2d toFirstSample = new Pose2d(12,18, Math.toRadians(495));
         Action DriveToFirstSample = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(toFirstSample.position, toFirstSample.heading, new TranslationalVelConstraint(15.0))
-                .turnTo(90)
-                //.strafeToLinearHeading(toPole.position, toPole.heading, new TranslationalVelConstraint(15.0))
+                .strafeToLinearHeading(toFirstSample.position, toFirstSample.heading, new TranslationalVelConstraint(20.0))
                 .build();
 
         Actions.runBlocking(new ParallelAction(
@@ -117,54 +98,98 @@ public class BasketAuto extends LinearOpMode
                 new SequentialAction(
                         new SleepAction(1),
                         new InstantAction(() -> extras.elevatorDown()),
-                        new SleepAction(3),
+                        new SleepAction(1),
                         new InstantAction(() -> extras.armExtend()),
-                        new SleepAction(2.0)
+                        new SleepAction(0.5),
+                        new InstantAction(() -> extras.intakeIn())
                 )
-
         ));
-        telemetry.addLine("Before 2 updatePoseEstimate");
-        telemetry.addData("x", drive.pose.position.x);
-        telemetry.addData("y", drive.pose.position.y);
-        telemetry.addData("heading",Math.toDegrees(drive.pose.heading.toDouble()));
-        drive.odo.update();
-        telemetry.addData("ODO heading", drive.odo.getHeading());
-        telemetry.update();
 
-        safeWaitSeconds(1);
-        drive.updatePoseEstimate();
 
-        telemetry.addLine("After 2 updatePoseEstimate");
-        telemetry.addData("x", drive.pose.position.x);
-        telemetry.addData("y", drive.pose.position.y);
-        telemetry.addData("heading",Math.toDegrees(drive.pose.heading.toDouble()));
-        drive.odo.update();
-        telemetry.addData("ODO heading", drive.odo.getHeading());
-        telemetry.update();
 
-        Pose2d firstsample = new Pose2d(15,18, Math.toRadians(90));
+
+        //drive.updatePoseEstimate();
+
+        // 1st sample: pick up the first sample by driving into it
+        Pose2d firstsample = new Pose2d(8,21, Math.toRadians(495));
         Action FirstSampleAction = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(firstsample.position, firstsample.heading, new TranslationalVelConstraint(15.0))
-                .turnTo(90)
-                //.strafeToLinearHeading(toPole.position, toPole.heading, new TranslationalVelConstraint(15.0))
+                .strafeToConstantHeading(firstsample.position, new TranslationalVelConstraint(10.0))
                 .build();
 
         Actions.runBlocking(new ParallelAction(
                 FirstSampleAction,
                 new SequentialAction(
-                        new InstantAction(() -> extras.intakeIn()),
                         new SleepAction(3),
                         new InstantAction(() -> extras.intakeOff()),
-                        new SleepAction(2.0)
+                        new InstantAction(() -> extras.armRetract())
                 )
-
         ));
 
- */
+
+
+
+        //1st sample: move to the basket and put it in the basket
+        Pose2d nearPole2 = new Pose2d(-13,10, Math.toRadians(405));
+        Pose2d toPole2 = new Pose2d(-19.3,6.6, Math.toRadians(405));
+        Action DriveToPole = drive.actionBuilder(drive.pose)
+                .strafeToLinearHeading(nearPole2.position, nearPole2.heading, baseVelConstraint)
+                .strafeToLinearHeading(toPole2.position, toPole2.heading, new TranslationalVelConstraint(20.0), new ProfileAccelConstraint(-40,40))
+                .build();
+
+        Actions.runBlocking(new ParallelAction(
+                DriveToPole,
+                new SequentialAction(
+                        new SleepAction(1.0),
+                        new InstantAction(() -> extras.intakeOut()),
+                        new SleepAction(3),
+                        new InstantAction(() -> extras.intakeOff()),
+                        new InstantAction(() -> extras.elevatorHighBasket()),
+                        new SleepAction(1.4),
+                        new InstantAction(() -> extras.sampleDump()),
+                        new SleepAction(1.0),
+                        new InstantAction(() -> extras.samplePickup()),
+                        new SleepAction(0.5)
+                )));
+
+        Pose2d toSecondSample = new Pose2d(0,18, Math.toRadians(495));
+        Action DriveToFirstSample2 = drive.actionBuilder(drive.pose)
+                .strafeToLinearHeading(toSecondSample.position, toSecondSample.heading, new TranslationalVelConstraint(20.0))
+                .build();
+
+        Actions.runBlocking(new ParallelAction(
+                DriveToFirstSample2,
+                new SequentialAction(
+                        new SleepAction(1),
+                        new InstantAction(() -> extras.elevatorDown()),
+                        new SleepAction(1),
+                        new InstantAction(() -> extras.armExtend()),
+                        new SleepAction(0.5),
+                        new InstantAction(() -> extras.intakeIn())
+                )
+        ));
+
+
+
+
+        //drive.updatePoseEstimate();
+
+        // 1st sample: pick up the first sample by driving into it
+        Pose2d secondSample = new Pose2d(-4,21, Math.toRadians(495));
+        Action FirstSampleAction2 = drive.actionBuilder(drive.pose)
+                .strafeToConstantHeading(secondSample.position, new TranslationalVelConstraint(10.0))
+                .build();
+
+        Actions.runBlocking(new ParallelAction(
+                FirstSampleAction2,
+                new SequentialAction(
+                        new SleepAction(3),
+                        new InstantAction(() -> extras.intakeOff()),
+                        new InstantAction(() -> extras.armRetract())
+                )
+        ));
+
 
         safeWaitSeconds(5);
-
-        //pick up the 1st sample on the field and put it in the high basket
 
         //pick up the 2nd sample on the field and put it in the high basket
 

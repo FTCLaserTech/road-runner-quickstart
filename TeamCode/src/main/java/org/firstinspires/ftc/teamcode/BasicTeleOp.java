@@ -101,13 +101,27 @@ public class BasicTeleOp extends LinearOpMode
 
         double previousOrientation = extras.readAutoStartRotation();
 
+        boolean initArmAtStart = false;
+        if(gamepad1.x)
+        {
+            initArmAtStart = true;
+        }
+
         telemetry.addData("Previous Orientation: ", previousOrientation);
+        telemetry.addData("Init Complete", initArmAtStart);
         telemetry.update();
+
 
         waitForStart();
 
         while (!isStopRequested())
         {
+            if(initArmAtStart == true)
+            {
+                extras.initArm();
+                initArmAtStart = false;
+            }
+
             elevatorCurrent = extras.elevator.getCurrent(CurrentUnit.AMPS);
             if (elevatorCurrent > elevatorMaxCurrent)
             {

@@ -102,7 +102,7 @@ public class BasicTeleOp extends LinearOpMode
         double previousOrientation = extras.readAutoStartRotation();
 
         boolean initArmAtStart = false;
-        if(gamepad1.x)
+        if(gamepad2.x)
         {
             initArmAtStart = true;
         }
@@ -164,9 +164,9 @@ public class BasicTeleOp extends LinearOpMode
             }
 
             if (gamepad1.left_bumper)
-                speedMultiplier = 0.75;
+                speedMultiplier = 0.85;
             else
-                speedMultiplier = 0.5;
+                speedMultiplier = 0.75;
 
             //adjustedAngle = 0;
             //adjustedAngle = extras.adjustAngleForDriverPosition(drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), ExtraOpModeFunctions.RobotStartPosition.STRAIGHT);

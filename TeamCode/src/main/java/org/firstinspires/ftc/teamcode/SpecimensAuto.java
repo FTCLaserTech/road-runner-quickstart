@@ -18,17 +18,20 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 
 @Config
+@Disabled
 @Autonomous(group = "a")
 
 public class SpecimensAuto extends LinearOpMode
 {
     @Override
+
     public void runOpMode() throws InterruptedException
     {
         double initialRotation = 270;

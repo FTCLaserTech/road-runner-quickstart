@@ -63,6 +63,8 @@ import java.util.List;
  */
 
 @Autonomous(name="Camera Test Drive", group="Robot")
+
+@Disabled
 //@Disabled
 public class CameraTimedDrive extends LinearOpMode
 {

@@ -307,7 +307,7 @@ public class ExtraOpModeFunctions
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
     }
-    public void armHang1()
+    public void armPark()
     {
         armPosition = ArmPosition.HANG1;
         elevatorTarget = 850;

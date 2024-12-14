@@ -63,7 +63,7 @@ import java.util.List;
  */
 
 @Autonomous(name="Color Sensor Test ", group="Robot")
-//@Disabled
+@Disabled
 public class ColorSensorTester extends LinearOpMode
 {
 

@@ -229,12 +229,20 @@ public class BasicTeleOp extends LinearOpMode
 
 
             //extend lift
-            if (gamepad2.right_bumper)
+            if (gamepad2.right_trigger > 0 && !gamepad2.start)
             {
                 extras.liftExtend();
+                if(gamepad2.back)
+                {
+                    extras.armRetract();
+                }
+                else
+                {
+                    extras.arm.setPower(0.1);
+                }
             }
             //retract lift
-            else if (gamepad2.right_trigger > 0 && !gamepad2.start)
+            else if (gamepad2.right_bumper )
             {
                 extras.liftRetract();
             }

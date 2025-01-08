@@ -121,6 +121,7 @@ public final class MecanumDrive {
     public final Localizer localizer;
 
     public Pose2d pose;
+    public Pose2d initialPose;
     public LinearOpMode lom;
 
     private final LinkedList<Pose2d> poseHistory = new LinkedList<>();
@@ -224,6 +225,7 @@ public final class MecanumDrive {
     }
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose, LinearOpMode lom) {
         this.pose = pose;
+        this.initialPose = pose;
         this.lom = lom;
 
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
@@ -489,7 +491,8 @@ public final class MecanumDrive {
         Twist2dDual<Time> twist = localizer.update();
         pose = pose.plus(twist.value());
 
-        //pose = new Pose2d(new Vector2d(odo.getPosX(), odo.getPosY()), Rotation2d.exp(odo.getHeading()));
+        //odo.update();
+        //pose = new Pose2d(new Vector2d(odo.getPosY()/25.4, odo.getPosX()/-25.4), Rotation2d.exp(odo.getHeading() + initialPose.heading.toDouble()));
 
         poseHistory.add(pose);
         while (poseHistory.size() > 100) {

@@ -286,7 +286,7 @@ public class ExtraOpModeFunctions
     public void armRetract()
     {
         armPosition = ArmPosition.RETRACT;
-        elevatorTarget = 177;
+        elevatorTarget = 177+30;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -294,7 +294,7 @@ public class ExtraOpModeFunctions
     public void armHorizontal()
     {
         armPosition = ArmPosition.HORIZONTAL;
-        elevatorTarget = 1600;
+        elevatorTarget = 1600+30;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -302,7 +302,7 @@ public class ExtraOpModeFunctions
     public void armVertical()
     {
         armPosition = ArmPosition.VERTICAL;
-        elevatorTarget = 625;
+        elevatorTarget = 625+30;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -310,7 +310,7 @@ public class ExtraOpModeFunctions
     public void armPark()
     {
         armPosition = ArmPosition.HANG1;
-        elevatorTarget = 850;
+        elevatorTarget = 850+30;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -319,7 +319,7 @@ public class ExtraOpModeFunctions
     public void armHang2()
     {
         armPosition = ArmPosition.HANG2;
-        elevatorTarget = 750;
+        elevatorTarget = 750+30;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);

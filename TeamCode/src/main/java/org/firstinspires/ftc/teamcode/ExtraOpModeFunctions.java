@@ -14,6 +14,7 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -94,7 +95,10 @@ public class ExtraOpModeFunctions
         lift = hardwareMap.get(DcMotorEx.class, "lift");
         lift.setDirection(DcMotorEx.Direction.FORWARD);
         lift.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        lift.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setTargetPosition(0);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setPower(0.1);
 
 
         arm = hardwareMap.get(DcMotorEx.class, "arm");
@@ -249,12 +253,35 @@ public class ExtraOpModeFunctions
 
 
 
-
-    public void liftExtend() { lift.setPower(1.0); }
-    public void liftRetract() { lift.setPower(-1.0); }
-    public void liftOff() {
-        lift.setPower(0);
+    public void liftExtend()
+    {
+        lift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        lift.setTargetPosition(-3530);
+        lift.setPower(1.0);
     }
+    public void liftRetract()
+    {
+        lift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        lift.setTargetPosition(-1500);
+        lift.setPower(1.0);
+    }
+    public void liftExtendManual()
+    {
+        lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        lift.setPower(1.0);
+    }
+    public void liftRetractManual()
+    {
+        lift.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        lift.setPower(-1.0);
+    }
+    public void liftStop()
+    {
+        lift.setTargetPosition(lift.getCurrentPosition());
+        lift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        lift.setPower(1.0);
+    }
+
 
     public void elbowMove (int distance)
     {
@@ -278,7 +305,7 @@ public class ExtraOpModeFunctions
     public void armExtend()
     {
         armPosition = ArmPosition.EXTEND;
-        elevatorTarget = 1700;
+        elevatorTarget = 1840;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -286,7 +313,7 @@ public class ExtraOpModeFunctions
     public void armRetract()
     {
         armPosition = ArmPosition.RETRACT;
-        elevatorTarget = 177+30;
+        elevatorTarget = 177+35;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);

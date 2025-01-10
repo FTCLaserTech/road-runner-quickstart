@@ -93,6 +93,7 @@ public class BasicTeleOp extends LinearOpMode
         double elevatorCurrent = 0;
         double elevatorMaxCurrent = 0;
         int numDangerElevatorAmps = 0;
+        boolean manualLiftStop = false;
 
         //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -229,27 +230,33 @@ public class BasicTeleOp extends LinearOpMode
 
 
             //extend lift
-            if (gamepad2.right_trigger > 0 && !gamepad2.start)
-            {
-                extras.liftExtend();
-                if(gamepad2.back)
-                {
-                    extras.armRetract();
-                }
-                else
-                {
-                    extras.arm.setPower(0.1);
-                }
-            }
-            //retract lift
-            else if (gamepad2.right_bumper )
+            if (gamepad2.right_trigger > 0 && !gamepad2.start && !gamepad2.back)
             {
                 extras.liftRetract();
+
             }
-            //turn lift off
+            //retract lift
+            if (gamepad2.right_bumper && !gamepad2.back)
+            {
+                extras.liftExtend();
+                extras.armVertical();
+            }
+
+            if(gamepad2.left_bumper && gamepad2.back) {
+                extras.liftRetractManual();
+                manualLiftStop = true;
+            }
+            else if(gamepad2.left_trigger > 0 && gamepad2.back) {
+                extras.liftExtendManual();
+                manualLiftStop = true;
+            }
             else
             {
-                extras.liftOff();
+                if(manualLiftStop == true)
+                {
+                extras.liftStop();
+                manualLiftStop = false;
+                }
             }
 
 
@@ -418,6 +425,7 @@ public class BasicTeleOp extends LinearOpMode
                 extras.intakeOff();
             }
 
+            /*
             if (gamepad2.left_bumper)
             {
                 gp2_left_bumper_pressed = true;
@@ -435,7 +443,7 @@ public class BasicTeleOp extends LinearOpMode
                 gp2_left_trigger_pressed = false;
                 extras.tailDown();
             }
-
+            */
             if(gamepad2.y && !gamepad2.back)
             {
                 gp2_y_pressed = true;
@@ -496,6 +504,7 @@ public class BasicTeleOp extends LinearOpMode
             //telemetry.addLine();
 
             telemetry.addData("Lift Counts: ", extras.lift.getCurrentPosition());
+            telemetry.addData("Lift Current: ", extras.lift.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("Arm Encoder Counts: ", extras.arm.getCurrentPosition());
             telemetry.addData("Arm Target Counts: ", extras.arm.getTargetPosition());
             telemetry.addData("Arm Current: ", armCurrent);

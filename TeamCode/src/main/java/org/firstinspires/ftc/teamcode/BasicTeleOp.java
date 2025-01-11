@@ -239,6 +239,7 @@ public class BasicTeleOp extends LinearOpMode
             if (gamepad2.right_bumper && !gamepad2.back)
             {
                 extras.liftExtend();
+                extras.elevatorDown();
                 extras.armVertical();
             }
 

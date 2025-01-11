@@ -321,7 +321,7 @@ public class ExtraOpModeFunctions
     public void armHorizontal()
     {
         armPosition = ArmPosition.HORIZONTAL;
-        elevatorTarget = 1600+30;
+        elevatorTarget = 1570;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);

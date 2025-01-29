@@ -42,16 +42,16 @@ public class SpecimensAutoPush3PinPoint extends LinearOpMode
         Pose2d slideOver2 = new Pose2d(43,40,Math.toRadians(270));
         Pose2d sweep2 = new Pose2d(42,14.5,Math.toRadians(270));
         Pose2d backTo2 = new Pose2d(40,38,Math.toRadians(270));
-        Pose2d slideOver3 = new Pose2d(53.5,42,Math.toRadians(270));
-        Pose2d sweep3 = new Pose2d(53.5,12,Math.toRadians(270));
+        Pose2d slideOver3 = new Pose2d(55,42,Math.toRadians(270));
+        Pose2d sweep3 = new Pose2d(54,12,Math.toRadians(270));
         Pose2d sweep3a = new Pose2d(54,15,Math.toRadians(270));
         Pose2d lineUpForWallSlide = new Pose2d(35,-5,Math.toRadians(180));
         Pose2d wallSlide = new Pose2d(51,-3,Math.toRadians(180));
         Pose2d lineUpForWallSlide2 = new Pose2d(-30,-9,Math.toRadians(180));
-        Pose2d wallSlide2 = new Pose2d(2,-9,Math.toRadians(180));
+        Pose2d wallSlide2 = new Pose2d(-1,-9,Math.toRadians(180));
         //Pose2d lineUpForWallSlide3 = new Pose2d(-20,-9,Math.toRadians(180));
         //Pose2d wallSlide3 = new Pose2d(2,-9,Math.toRadians(180));
-        ///Pose2d lineUpForWallSlide4 = new Pose2d(-20,-9,Math.toRadians(180));
+        //Pose2d lineUpForWallSlide4 = new Pose2d(-20,-9,Math.toRadians(180));
         //Pose2d wallSlide4 = new Pose2d(2,-9,Math.toRadians(180));
         Pose2d toSubmursible2 = new Pose2d(-65,34,Math.toRadians(265));
         Pose2d toSubmursible3 = new Pose2d(-65,34,Math.toRadians(265));
@@ -178,8 +178,9 @@ public class SpecimensAutoPush3PinPoint extends LinearOpMode
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         //.strafeToLinearHeading(lineUpForWallSlide2.position, lineUpForWallSlide2.heading, new TranslationalVelConstraint(55.0))
-                        .splineToLinearHeading(lineUpForWallSlide2, Math.toRadians(270), new TranslationalVelConstraint(50.0))
-                        .strafeToLinearHeading(wallSlide2.position, wallSlide2.heading, new TranslationalVelConstraint(55.0))
+                        .setTangent(Math.toRadians(-45))
+                        .splineToLinearHeading(lineUpForWallSlide2, Math.toRadians(0), new TranslationalVelConstraint(55.0))
+                        .splineToLinearHeading(wallSlide2, Math.toRadians(0), new TranslationalVelConstraint(55.0))
                         .build());
 
 
@@ -201,8 +202,9 @@ public class SpecimensAutoPush3PinPoint extends LinearOpMode
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         //.strafeToLinearHeading(lineUpForWallSlide2.position, lineUpForWallSlide2.heading, new TranslationalVelConstraint(55.0))
-                        .splineToLinearHeading(lineUpForWallSlide2, Math.toRadians(270), new TranslationalVelConstraint(50.0))
-                        .strafeToLinearHeading(wallSlide2.position, wallSlide2.heading, new TranslationalVelConstraint(55.0))
+                        .setTangent(Math.toRadians(-45))
+                        .splineToLinearHeading(lineUpForWallSlide2, Math.toRadians(0), new TranslationalVelConstraint(50.0))
+                        .splineToLinearHeading(wallSlide2, Math.toRadians(0), new TranslationalVelConstraint(55.0))
                         .build());
 
         drive.odo.setPosition(new Pose2D(DistanceUnit.MM,0,0, AngleUnit.DEGREES, 180-initialRotation));
@@ -223,8 +225,9 @@ public class SpecimensAutoPush3PinPoint extends LinearOpMode
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         //.strafeToLinearHeading(lineUpForWallSlide2.position, lineUpForWallSlide2.heading, new TranslationalVelConstraint(55.0))
-                        .splineToLinearHeading(lineUpForWallSlide2, Math.toRadians(270), new TranslationalVelConstraint(50.0))
-                        .strafeToLinearHeading(wallSlide2.position, wallSlide2.heading, new TranslationalVelConstraint(55.0))
+                        .setTangent(Math.toRadians(-45))
+                        .splineToLinearHeading(lineUpForWallSlide2, Math.toRadians(0), new TranslationalVelConstraint(55.0))
+                        .splineToLinearHeading(wallSlide2, Math.toRadians(0), new TranslationalVelConstraint(55.0))
                         .build());
 
         drive.odo.setPosition(new Pose2D(DistanceUnit.MM,0,0, AngleUnit.DEGREES, 180-initialRotation));

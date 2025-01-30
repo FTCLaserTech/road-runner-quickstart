@@ -60,19 +60,19 @@ public class DumpandPark extends LinearOpMode
 
 
 
-        Pose2d nearPole = new Pose2d(-15,4, Math.toRadians(270));
-        Pose2d toPole = new Pose2d(-20.5,6, Math.toRadians(405));
+        Pose2d nearPole = new Pose2d(-15,9, Math.toRadians(400));
+        Pose2d toPole = new Pose2d(-19.5,6.5, Math.toRadians(400));
         Pose2d backUpFromSubmursible = new Pose2d(5,26,Math.toRadians(270));
         Pose2d slideOver1 = new Pose2d(-10,53,Math.toRadians(270));
         Pose2d sweep = new Pose2d(-10,7,Math.toRadians(270));
         Pose2d backTo1 = new Pose2d(-10,52,Math.toRadians(270));
-        Pose2d slideOver2 = new Pose2d(-20,52,Math.toRadians(270));
-        Pose2d sweep2 = new Pose2d(-20,10,Math.toRadians(270));
-        Pose2d backTo2 = new Pose2d(-20,52,Math.toRadians(270));
-        Pose2d slideOver3 = new Pose2d(-30,52,Math.toRadians(270));
-        Pose2d sweep3 = new Pose2d(-30,16,Math.toRadians(270));
-        Pose2d lineUpForPark = new Pose2d(0,57,Math.toRadians(360));
-        Pose2d park = new Pose2d(12,57,Math.toRadians(360));
+        Pose2d slideOver2 = new Pose2d(-16,52,Math.toRadians(270));
+        Pose2d sweep2 = new Pose2d(-16,10,Math.toRadians(270));
+        Pose2d backTo2 = new Pose2d(-16,52,Math.toRadians(270));
+        Pose2d slideOver3 = new Pose2d(-25,52,Math.toRadians(270));
+        Pose2d sweep3 = new Pose2d(-25,16,Math.toRadians(270));
+        Pose2d lineUpForPark = new Pose2d(0,54,Math.toRadians(360));
+        Pose2d park = new Pose2d(15,50,Math.toRadians(360));
 
 
 
@@ -81,7 +81,6 @@ public class DumpandPark extends LinearOpMode
 
         Action DriveToBasketPole = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(nearPole.position, nearPole.heading, baseVelConstraint)
-                .strafeToLinearHeading(toPole.position, toPole.heading, baseVelConstraint, new ProfileAccelConstraint(-40,40))
                 .build();
 
         Actions.runBlocking(new ParallelAction(
@@ -91,25 +90,37 @@ public class DumpandPark extends LinearOpMode
                         new InstantAction(() -> extras.armVertical()),
                         new SleepAction(1.6),
                         new InstantAction(() -> extras.elevatorHighBasket()),
-                        new SleepAction(1.8),
-                        new InstantAction(() -> extras.sampleDump()),
-                        new SleepAction(1.0),
-                        new InstantAction(() -> extras.samplePickup()),
-                        new SleepAction(0.5)
+                        new SleepAction(2.0)
                 )
         ));
 
         Action driveToBasketPole = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(backUpFromSubmursible.position, backUpFromSubmursible.heading, new TranslationalVelConstraint(10.0))
+                .strafeToLinearHeading(toPole.position, toPole.heading, baseVelConstraint, new ProfileAccelConstraint(-40,40))
                 .build();
 
         Actions.runBlocking(new ParallelAction(
                 driveToBasketPole,
                 new SequentialAction(
-                        new SleepAction(0.5),
-                        new InstantAction(() -> extras.elevatorDown())
+                        new SleepAction(1.8),
+                        new InstantAction(() -> extras.sampleDump()),
+                        new SleepAction(1.0),
+                        new InstantAction(() -> extras.samplePickup()),
+                        new SleepAction(0.5)
                         )
         ));
+
+        Action awayFromPole = drive.actionBuilder(drive.pose)
+                .strafeToLinearHeading(backUpFromSubmursible.position, backUpFromSubmursible.heading, new TranslationalVelConstraint(10.0))
+                .build();
+
+        Actions.runBlocking(new ParallelAction(
+                awayFromPole,
+                new SequentialAction(
+                        new SleepAction(0.5),
+                        new InstantAction(() -> extras.elevatorDown())
+                )
+        ));
+
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -142,7 +153,7 @@ public class DumpandPark extends LinearOpMode
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(park.position, park.heading, new TranslationalVelConstraint(3.0))
+                        .strafeToLinearHeading(park.position, park.heading, new TranslationalVelConstraint(8.0))
                         .build());
 
         safeWaitSeconds(0.5);

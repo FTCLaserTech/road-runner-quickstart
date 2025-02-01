@@ -108,30 +108,7 @@ public class BasicTeleOp extends LinearOpMode
             initArmAtStart = true;
         }
 
-        while (!gamepad2.dpad_left)
-        {
-            sleep(100);
-            telemetry.addLine("Adjust Hanging arm with left bumpers");
-            telemetry.addLine("DPad Left to exit");
-            telemetry.update();
 
-            if(gamepad2.left_bumper) {
-                extras.liftRetractManual();
-                manualLiftStop = true;
-            }
-            else if(gamepad2.left_trigger > 0) {
-                extras.liftExtendManual();
-                manualLiftStop = true;
-            }
-            else
-            {
-                if(manualLiftStop == true)
-                {
-                    extras.liftStop();
-                    manualLiftStop = false;
-                }
-            }
-        }
 
         telemetry.addData("Previous Orientation: ", previousOrientation);
         telemetry.addData("Init Complete", initArmAtStart);
@@ -260,12 +237,12 @@ public class BasicTeleOp extends LinearOpMode
                 extras.liftRetract();
 
             }
-            //retract lift
+            //extend lift
             if (gamepad2.right_bumper && !gamepad2.back)
             {
                 extras.liftExtend();
                 extras.elevatorDown();
-                extras.armVertical();
+                extras.armRetract();
             }
 
             if(gamepad2.left_bumper && gamepad2.back) {

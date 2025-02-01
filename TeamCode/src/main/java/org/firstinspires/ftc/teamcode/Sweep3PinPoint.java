@@ -15,6 +15,7 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.TurnConstraints;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 @Config
 @Autonomous(group = "a")
+@Disabled
 
 public class Sweep3PinPoint extends LinearOpMode
 {

@@ -256,7 +256,7 @@ public class ExtraOpModeFunctions
     public void liftExtend()
     {
         lift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        lift.setTargetPosition(-3530);
+        lift.setTargetPosition(-1600);
         lift.setPower(1.0);
     }
     public void liftRetract()
@@ -305,7 +305,7 @@ public class ExtraOpModeFunctions
     public void armExtend()
     {
         armPosition = ArmPosition.EXTEND;
-        elevatorTarget = 1840;
+        elevatorTarget = 1865;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -321,7 +321,7 @@ public class ExtraOpModeFunctions
     public void armHorizontal()
     {
         armPosition = ArmPosition.HORIZONTAL;
-        elevatorTarget = 1570;
+        elevatorTarget = 1600;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);

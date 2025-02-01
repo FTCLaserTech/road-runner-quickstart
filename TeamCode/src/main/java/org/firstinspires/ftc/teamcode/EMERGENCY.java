@@ -24,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 @Config
 @Autonomous(group = "a")
 
-public class SpecimensAutoPush3PinPoint extends LinearOpMode
+public class EMERGENCY extends LinearOpMode
 {
     @Override
     public void runOpMode() throws InterruptedException
@@ -110,7 +110,7 @@ public class SpecimensAutoPush3PinPoint extends LinearOpMode
         telemetry.addData("heading", drive.pose.heading);
         telemetry.update();
 
-        /*
+
         while (!gamepad2.dpad_left)
         {
             sleep(100);
@@ -136,7 +136,7 @@ public class SpecimensAutoPush3PinPoint extends LinearOpMode
             }
         }
 
-         */
+
 
         while (!isStopRequested() && !opModeIsActive())
         {

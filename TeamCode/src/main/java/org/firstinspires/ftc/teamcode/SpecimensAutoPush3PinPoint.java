@@ -40,24 +40,24 @@ public class SpecimensAutoPush3PinPoint extends LinearOpMode
         Pose2d sweep = new Pose2d(31,15,Math.toRadians(270));
         Pose2d backTo1 = new Pose2d(31,38,Math.toRadians(270));
         Pose2d slideOver2 = new Pose2d(43,40,Math.toRadians(270));
-        Pose2d sweep2 = new Pose2d(42,14.5,Math.toRadians(270));
+        Pose2d sweep2 = new Pose2d(42,13.5,Math.toRadians(270));
         Pose2d backTo2 = new Pose2d(40,38,Math.toRadians(270));
         Pose2d slideOver3 = new Pose2d(54.5,42,Math.toRadians(270));
-        Pose2d sweep3 = new Pose2d(53,12,Math.toRadians(270));
+        Pose2d sweep3 = new Pose2d(53,9,Math.toRadians(270));
         Pose2d sweep3a = new Pose2d(45,16,Math.toRadians(270));
         Pose2d lineUpForWallSlide = new Pose2d(31,-5,Math.toRadians(180));
-        Pose2d wallSlide = new Pose2d(52,-3,Math.toRadians(180));
-        Pose2d lineUpForWallSlide2 = new Pose2d(-10,-20,Math.toRadians(180));
-        Pose2d wallSlide2 = new Pose2d(-3,-20,Math.toRadians(180));
+        Pose2d wallSlide = new Pose2d(52,-5,Math.toRadians(180));
+        Pose2d lineUpForWallSlide2 = new Pose2d(-10,-20,Math.toRadians(160));
+        Pose2d wallSlide2 = new Pose2d(-1,-20,Math.toRadians(170));
         //Pose2d lineUpForWallSlide3 = new Pose2d(-20,-9,Math.toRadians(180));
         //Pose2d wallSlide3 = new Pose2d(2,-9,Math.toRadians(180));
         //Pose2d lineUpForWallSlide4 = new Pose2d(-20,-9,Math.toRadians(180));
         //Pose2d wallSlide4 = new Pose2d(2,-9,Math.toRadians(180));
-        Pose2d toSubmursible2 = new Pose2d(-67,34,Math.toRadians(265));
-        Pose2d toSubmursible3 = new Pose2d(-67,34,Math.toRadians(265));
-        Pose2d toSubmursible4 = new Pose2d(-67,34,Math.toRadians(265));
-        Pose2d toSubmursible5 = new Pose2d(-67,34,Math.toRadians(265));
-        Pose2d park = new Pose2d(-15,-2,Math.toRadians(265));
+        Pose2d toSubmursible2 = new Pose2d(-67,34,Math.toRadians(270));
+        Pose2d toSubmursible3 = new Pose2d(-67,34,Math.toRadians(270));
+        Pose2d toSubmursible4 = new Pose2d(-67,34,Math.toRadians(270));
+        Pose2d toSubmursible5 = new Pose2d(-67,34,Math.toRadians(270));
+        Pose2d park = new Pose2d(-10,-2,Math.toRadians(275));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
@@ -151,12 +151,12 @@ public class SpecimensAutoPush3PinPoint extends LinearOpMode
                         new SleepAction(0),
                         new InstantAction(() -> extras.armVertical()),
                         new InstantAction(() -> extras.elevatorHighChamber()),
-                        new SleepAction(1.4),
+                        new SleepAction(1.2),
                         new InstantAction(() -> extras.elevatorDown())
                 )
         ));
 
-        safeWaitSeconds(0.15);
+        safeWaitSeconds(0.0);
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)

@@ -77,22 +77,26 @@ public final class MecanumDrive {
         public double kA = 0.00047;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 50;
-        public double minProfileAccel = -90;
-        public double maxProfileAccel = 80;
+        public double maxWheelVel = 45;
+        //ublic double minProfileAccel = -90;
+        public double minProfileAccel = -50;
+        //public double maxProfileAccel = 80;
+        public double maxProfileAccel = 50;
 
         // turn profile parameters (in radians)
-        public double maxAngVel = Math.PI; // shared with path
-        public double maxAngAccel = Math.PI;
+        //public double maxAngVel = Math.PI; // shared with path
+        public double maxAngVel = 8; // shared with path
+        //public double maxAngAccel = Math.PI;
+        public double maxAngAccel = 8;
 
         // path controller gains
-        public double axialGain = 8.5;
-        public double lateralGain = 2.0;
-        public double headingGain = 1.0; // shared with turn
+        public double axialGain = 8.0;
+        public double lateralGain = 7.0;
+        public double headingGain = 6.0; // shared with turn
 
-        public double axialVelGain = 0.0;
-        public double lateralVelGain = 0.0;
-        public double headingVelGain = 0.0; // shared with turn
+        public double axialVelGain = 0.5;
+        public double lateralVelGain = 0.5;
+        public double headingVelGain = 0.5; // shared with turn
     }
 
     public static Params PARAMS = new Params();
@@ -492,7 +496,8 @@ public final class MecanumDrive {
         //pose = pose.plus(twist.value());
 
         odo.update();
-        pose = new Pose2d(new Vector2d(odo.getPosY()/25.4, odo.getPosX()/-25.4), Rotation2d.exp(odo.getHeading() + initialPose.heading.toDouble()));
+        //pose = new Pose2d(new Vector2d(odo.getPosY()/25.4, odo.getPosX()/-25.4), Rotation2d.exp(odo.getHeading() + initialPose.heading.toDouble()));
+        pose = new Pose2d(new Vector2d(odo.getPosX()/-25.4, odo.getPosY()/-25.4), Rotation2d.exp(odo.getHeading() + initialPose.heading.toDouble()));
 
         poseHistory.add(pose);
         while (poseHistory.size() > 100) {

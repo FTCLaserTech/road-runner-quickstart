@@ -32,9 +32,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 import java.util.Locale;
 
-@Disabled
-
-
 /*
 This opmode shows how to use the goBILDA® Pinpoint Odometry Computer.
 The goBILDA Odometry Computer is a device designed to solve the Pose Exponential calculation

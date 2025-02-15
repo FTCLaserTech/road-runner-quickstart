@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
@@ -22,10 +23,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
 import java.util.Arrays;
 
 @Config
-@Disabled
+//@Disabled
 @Autonomous(group = "a")
 
 public class SpeciminSweep extends LinearOpMode
@@ -33,15 +38,28 @@ public class SpeciminSweep extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        double initialRotation = 270;
+        Pose2D ppPos;
+
+        double initialRotation = 180;
         Pose2d initPose = new Pose2d(0,0,Math.toRadians(initialRotation));
-        Pose2d toSubmursible = new Pose2d(-15,29,Math.toRadians(270));
-        Pose2d backUpFromSubmursible = new Pose2d(5,20,Math.toRadians(360));
-        Pose2d lineUpForSweep = new Pose2d(13,22,Math.toRadians(405));
-        Pose2d sweep = new Pose2d(15,24,Math.toRadians(320));
+        Pose2d toSubmursible = new Pose2d(29,10,Math.toRadians(180));
+        Pose2d backUpFromSubmursible = new Pose2d(20,-11,Math.toRadians(315));
+        Pose2d lineUpForSweep1 = new Pose2d(20,-14,Math.toRadians(-45));
+        Pose2d lineUpForSweep2 = new Pose2d(20,-25,Math.toRadians(-45));
+        Pose2d lineUpForSweep3 = new Pose2d(20,-36,Math.toRadians(-45));
+        Pose2d sweep3 = new Pose2d(4,-30,Math.toRadians(-90));
+        Pose2d lineUpForWallSlide = new Pose2d(0,-8,Math.toRadians(-265));
+        Pose2d wallSlide = new Pose2d(-5,-49,Math.toRadians(90));
+        Pose2d lineUpForWallSlide2 = new Pose2d(-10,-20,Math.toRadians(160));
+        Pose2d wallSlide2 = new Pose2d(-1,-20,Math.toRadians(170));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
+
+        // hang pre-loaded sample in the high chamber
+        Action DriveToNearSubmursibleAction = drive.actionBuilder(drive.pose)
+                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading)
+                .build();
 
         //sleep(500);
         extras.initArm();
@@ -50,7 +68,11 @@ public class SpeciminSweep extends LinearOpMode
         telemetry.addLine("Initialized");
         telemetry.addData("x", drive.pose.position.x);
         telemetry.addData("y", drive.pose.position.y);
-        telemetry.addData("heading", drive.pose.heading);
+        telemetry.addData("heading", Math.toDegrees(drive.pose.heading.toDouble()));
+        ppPos = drive.odo.getPosition();
+        telemetry.addData("x", ppPos.getX(DistanceUnit.INCH));
+        telemetry.addData("y", ppPos.getY(DistanceUnit.INCH));
+        telemetry.addData("odo heading", ppPos.getHeading(AngleUnit.DEGREES));
         telemetry.update();
 
         while (!isStopRequested() && !opModeIsActive())
@@ -62,45 +84,42 @@ public class SpeciminSweep extends LinearOpMode
                 new TranslationalVelConstraint(15.0),
                 new AngularVelConstraint(Math.toRadians(45))));
 
-        // hang pre-loaded sample in the high chamber
-        Action DriveToNearSubmursibleAction = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(15.0))
-                .build();
-
         Actions.runBlocking(new ParallelAction(
                 DriveToNearSubmursibleAction,
                 new SequentialAction(
                         new SleepAction(0),
                         new InstantAction(() -> extras.armVertical()),
                         new InstantAction(() -> extras.elevatorHighChamber()),
-                        new SleepAction(3),
-                        new InstantAction(() -> extras.elevatorDown())
+                        new SleepAction(1.5),
+                        new InstantAction(() -> extras.elevatorDown()),
+                        new InstantAction(() -> extras.armExtend()),
+                        new SleepAction(0.3)
                 )
         ));
 
-        safeWaitSeconds(1);
-
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(backUpFromSubmursible.position, backUpFromSubmursible.heading, new TranslationalVelConstraint(15.0))
+                        .strafeToLinearHeading(backUpFromSubmursible.position, backUpFromSubmursible.heading)
+                        .strafeToLinearHeading(lineUpForSweep1.position, lineUpForSweep1.heading)
+                        .turnTo(Math.toRadians(-110))
+                        .turnTo(Math.toRadians(-45))
+                        .strafeToLinearHeading(lineUpForSweep2.position, lineUpForSweep2.heading)
+                        .turnTo(Math.toRadians(-110))
+                        .turnTo(Math.toRadians(-45))
+                        .strafeToLinearHeading(lineUpForSweep3.position, lineUpForSweep3.heading)
+                        .strafeToLinearHeading(sweep3.position, sweep3.heading)
                         .build());
-
-        Action lineUpToSweepAction = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(lineUpForSweep.position, lineUpForSweep.heading, new TranslationalVelConstraint(15.0))
-                .build();
 
         Actions.runBlocking(new ParallelAction(
-                        lineUpToSweepAction,
-                        new InstantAction(() -> extras.armExtend())
-                )
+                drive.actionBuilder(drive.pose)
+                        .splineToLinearHeading(lineUpForWallSlide, lineUpForWallSlide.heading)
+                        .strafeToLinearHeading(wallSlide.position,wallSlide.heading)
+                        .build(),
+                new InstantAction(() -> extras.armVertical())
+            )
         );
 
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .turnTo(320, new TurnConstraints(Math.toRadians(90), Math.toRadians(-45), Math.toRadians(45)))
-                        .build());
-
-        safeWaitSeconds(10);
+        safeWaitSeconds(30);
 
 
         // Hang #2

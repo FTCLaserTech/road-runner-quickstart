@@ -299,7 +299,7 @@ public class ExtraOpModeFunctions
         intake.setPower(0);
     }
 
-    public enum ArmPosition {STOP, EXTEND, RETRACT, HORIZONTAL, VERTICAL, HANG1, HANG2}
+    public enum ArmPosition {STOP, EXTEND, RETRACT, HORIZONTAL, VERTICAL, HANG1, HANG2,HOME}
     ArmPosition armPosition = ArmPosition.STOP;
 
     public void armExtend()
@@ -338,6 +338,13 @@ public class ExtraOpModeFunctions
     {
         armPosition = ArmPosition.HANG1;
         elevatorTarget = 850+30;
+        arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        arm.setTargetPosition(elevatorTarget);
+        arm.setPower(1.0);
+    }
+    public void initarm() {
+        armPosition = ArmPosition.HOME;
+        elevatorTarget = 850 + 30;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -405,6 +412,7 @@ public class ExtraOpModeFunctions
     public void armOff() {
         arm.setPower(0);
     }
+    }
 
     /*
     public void setElevatorPosition(int target)
@@ -416,7 +424,7 @@ public class ExtraOpModeFunctions
         elevatorLeft.setPower(1.0);
         elevatorRight.setPower(1.0);
     }
-    */
+
 
     public void tailUp()
     {
@@ -502,4 +510,4 @@ public class ExtraOpModeFunctions
         return(angle);
     }
 }
-
+*/

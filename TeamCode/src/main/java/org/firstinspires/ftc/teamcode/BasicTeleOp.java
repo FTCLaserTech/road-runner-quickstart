@@ -401,9 +401,9 @@ public class BasicTeleOp extends LinearOpMode
                 extras.initElevator();
                 gp2_by_pressed = false;
             }
-
+            //(gamepad2.back) &&
             // Init Arm
-            if ((gamepad2.back) && (gamepad2.x))
+            if ( (gamepad2.x))
             {
                 gp2_bx_pressed = true;
             }

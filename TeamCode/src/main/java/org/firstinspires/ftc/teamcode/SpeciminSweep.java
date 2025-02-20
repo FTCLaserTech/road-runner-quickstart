@@ -50,8 +50,13 @@ public class SpeciminSweep extends LinearOpMode
         Pose2d sweep3 = new Pose2d(4,-30,Math.toRadians(-90));
         Pose2d lineUpForWallSlide = new Pose2d(0,-8,Math.toRadians(-265));
         Pose2d wallSlide = new Pose2d(-5,-49,Math.toRadians(90));
-        Pose2d lineUpForWallSlide2 = new Pose2d(-10,-20,Math.toRadians(160));
-        Pose2d wallSlide2 = new Pose2d(-1,-20,Math.toRadians(170));
+        Pose2d lineUpForWallSlide2 = new Pose2d(0,-8,Math.toRadians(160));
+        Pose2d wallSlide2 = new Pose2d(-5,-20,Math.toRadians(170));
+        Pose2d toSubmursible2 = new Pose2d(-67,34,Math.toRadians(270));
+        Pose2d toSubmursible3 = new Pose2d(-67,34,Math.toRadians(270));
+        Pose2d toSubmursible4 = new Pose2d(-67,34,Math.toRadians(270));
+        Pose2d toSubmursible5 = new Pose2d(-67,34,Math.toRadians(270));
+        Pose2d park = new Pose2d(-10,-2,Math.toRadians(275));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);

@@ -40,6 +40,19 @@ public class SpeciminSweep extends LinearOpMode
     {
         Pose2D ppPos;
 
+        ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
+        extras.initArm();
+        extras.tailUp();
+        extras.armRetract();
+
+        while (!gamepad2.dpad_left)
+        {
+            sleep(100);
+            telemetry.addLine("Align robot to wall");
+            telemetry.addLine("GP2 DPad Left to exit");
+            telemetry.update();
+        }
+
         double initialRotation = 180;
         Pose2d initPose = new Pose2d(0,0,Math.toRadians(initialRotation));
         Pose2d toSubmursible = new Pose2d(29,10,Math.toRadians(180));
@@ -59,7 +72,6 @@ public class SpeciminSweep extends LinearOpMode
         Pose2d park = new Pose2d(-10,-2,Math.toRadians(275));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
-        ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
 
         // hang pre-loaded sample in the high chamber
         Action DriveToNearSubmursibleAction = drive.actionBuilder(drive.pose)
@@ -67,8 +79,6 @@ public class SpeciminSweep extends LinearOpMode
                 .build();
 
         //sleep(500);
-        extras.initArm();
-        extras.tailUp();
 
         telemetry.addLine("Initialized");
         telemetry.addData("x", drive.pose.position.x);

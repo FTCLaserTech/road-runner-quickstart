@@ -233,7 +233,7 @@ public class ExtraOpModeFunctions
     public void initArm()
     {
         arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        arm.setPower(-0.35);
+        arm.setPower(0.35);
         arm.setCurrentAlert(4, CurrentUnit.AMPS);
 
         while(!arm.isOverCurrent())
@@ -305,7 +305,8 @@ public class ExtraOpModeFunctions
     public void armExtend()
     {
         armPosition = ArmPosition.EXTEND;
-        elevatorTarget = 1895;
+        //elevatorTarget = 1895;
+        elevatorTarget = -50;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -313,7 +314,8 @@ public class ExtraOpModeFunctions
     public void armRetract()
     {
         armPosition = ArmPosition.RETRACT;
-        elevatorTarget = 177+35;
+        //elevatorTarget = 177+35;
+        elevatorTarget = -1750;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -321,7 +323,8 @@ public class ExtraOpModeFunctions
     public void armHorizontal()
     {
         armPosition = ArmPosition.HORIZONTAL;
-        elevatorTarget = 1600;
+        //elevatorTarget = 1600;
+        elevatorTarget = -300;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -329,7 +332,8 @@ public class ExtraOpModeFunctions
     public void armVertical()
     {
         armPosition = ArmPosition.VERTICAL;
-        elevatorTarget = 625+30;
+        //elevatorTarget = 625+30;
+        elevatorTarget = -1250;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -337,14 +341,16 @@ public class ExtraOpModeFunctions
     public void armPark()
     {
         armPosition = ArmPosition.HANG1;
-        elevatorTarget = 850+30;
+        //elevatorTarget = 850+30;
+        elevatorTarget = -1020;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
     }
-    public void initarm() {
+    public void armBack() {
         armPosition = ArmPosition.HOME;
-        elevatorTarget = 850 + 30;
+       // elevatorTarget = 0;
+        elevatorTarget = -1900;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);
@@ -412,7 +418,7 @@ public class ExtraOpModeFunctions
     public void armOff() {
         arm.setPower(0);
     }
-    }
+
 
     /*
     public void setElevatorPosition(int target)
@@ -424,7 +430,7 @@ public class ExtraOpModeFunctions
         elevatorLeft.setPower(1.0);
         elevatorRight.setPower(1.0);
     }
-
+    */
 
     public void tailUp()
     {
@@ -510,4 +516,4 @@ public class ExtraOpModeFunctions
         return(angle);
     }
 }
-*/
+

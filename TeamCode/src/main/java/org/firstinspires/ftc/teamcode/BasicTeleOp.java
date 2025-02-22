@@ -8,19 +8,14 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 //imports from the Mecanum website
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 
 @TeleOp(group = "A")
 public class BasicTeleOp extends LinearOpMode
@@ -401,9 +396,9 @@ public class BasicTeleOp extends LinearOpMode
                 extras.initElevator();
                 gp2_by_pressed = false;
             }
-            //(gamepad2.back) &&
+
             // Init Arm
-            if ( (gamepad2.x))
+            if ((gamepad2.back) && (gamepad2.x))
             {
                 gp2_bx_pressed = true;
             }
@@ -481,17 +476,34 @@ public class BasicTeleOp extends LinearOpMode
             }
             else if (!gamepad1.a && gp1_a_pressed) {
                 gp1_a_pressed = false;
-                if(extras.armPosition == ExtraOpModeFunctions.ArmPosition.EXTEND)
-                {
-                    extras.armHorizontal();
-                }
-                else if (extras.armPosition == ExtraOpModeFunctions.ArmPosition.HORIZONTAL)
+                if (extras.armPosition == ExtraOpModeFunctions.ArmPosition.HORIZONTAL)
                 {
                     extras.armExtend();
                 }
+                else
+                {
+                    extras.armHorizontal();
+                }
             }
 
+            // Arm to Zero
+            if ( gamepad1.y )
+            {
+                gp1_y_pressed = true;
+            }
+            else if (!gamepad1.y && gp1_y_pressed)
+            {
+                gp1_y_pressed = false;
+                if (extras.armPosition == ExtraOpModeFunctions.ArmPosition.HORIZONTAL)
+                {
+                    extras.armBack();
+                }
+                else
+                {
+                    extras.armHorizontal();
+                }
 
+            }
             //telemetry.addData("x", drive.pose.position.x);
             //telemetry.addData("y", drive.pose.position.y);
             //telemetry.addData("heading", drive.pose.heading.real);

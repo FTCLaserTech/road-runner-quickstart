@@ -65,7 +65,7 @@ public class SpeciminSweep extends LinearOpMode
         Pose2d wallSlide = new Pose2d(-5,-49,Math.toRadians(90));
         Pose2d lineUpForWallSlide2 = new Pose2d(0,-8,Math.toRadians(160));
         Pose2d wallSlide2 = new Pose2d(-5,-20,Math.toRadians(170));
-        Pose2d toSubmursible2 = new Pose2d(-67,34,Math.toRadians(270));
+        Pose2d toSubmursible2 = new Pose2d(20,60,Math.toRadians(0));
         Pose2d toSubmursible3 = new Pose2d(-67,34,Math.toRadians(270));
         Pose2d toSubmursible4 = new Pose2d(-67,34,Math.toRadians(270));
         Pose2d toSubmursible5 = new Pose2d(-67,34,Math.toRadians(270));
@@ -75,7 +75,12 @@ public class SpeciminSweep extends LinearOpMode
 
         // hang pre-loaded sample in the high chamber
         Action DriveToNearSubmursibleAction = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading)
+                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(50.0))
+                .build();
+
+        Action DriveToNearSubmursibleAction2 = drive.actionBuilder(new Pose2d(0,0,Math.toRadians(-90)))
+                .strafeToLinearHeading(toSubmursible2.position, toSubmursible2.heading, new TranslationalVelConstraint(50.0))
+                // move to submersible
                 .build();
 
         //sleep(500);
@@ -95,10 +100,6 @@ public class SpeciminSweep extends LinearOpMode
             safeWaitSeconds(0.010);
         }
 
-        VelConstraint baseVelConstraint=new MinVelConstraint(Arrays.asList(
-                new TranslationalVelConstraint(15.0),
-                new AngularVelConstraint(Math.toRadians(45))));
-
         Actions.runBlocking(new ParallelAction(
                 DriveToNearSubmursibleAction,
                 new SequentialAction(
@@ -114,25 +115,40 @@ public class SpeciminSweep extends LinearOpMode
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(backUpFromSubmursible.position, backUpFromSubmursible.heading)
+                        .strafeToLinearHeading(backUpFromSubmursible.position, backUpFromSubmursible.heading, new TranslationalVelConstraint(50.0))
                         .strafeToLinearHeading(lineUpForSweep1.position, lineUpForSweep1.heading)
                         .turnTo(Math.toRadians(-110))
                         .turnTo(Math.toRadians(-45))
                         .strafeToLinearHeading(lineUpForSweep2.position, lineUpForSweep2.heading)
                         .turnTo(Math.toRadians(-110))
                         .turnTo(Math.toRadians(-45))
-                        .strafeToLinearHeading(lineUpForSweep3.position, lineUpForSweep3.heading)
-                        .strafeToLinearHeading(sweep3.position, sweep3.heading)
+                        .strafeToLinearHeading(lineUpForSweep3.position, lineUpForSweep3.heading, new TranslationalVelConstraint(50.0))
+                        .strafeToLinearHeading(sweep3.position, sweep3.heading, new TranslationalVelConstraint(50.0))
                         .build());
 
-        Actions.runBlocking(new ParallelAction(
+        Actions.runBlocking(new SequentialAction(
+                new InstantAction(() -> extras.armVertical()),
+                new SleepAction(0.1),
                 drive.actionBuilder(drive.pose)
-                        .splineToLinearHeading(lineUpForWallSlide, lineUpForWallSlide.heading)
+                        .splineToLinearHeading(lineUpForWallSlide, lineUpForWallSlide.heading, new TranslationalVelConstraint(50.0))
                         .strafeToLinearHeading(wallSlide.position,wallSlide.heading)
-                        .build(),
-                new InstantAction(() -> extras.armVertical())
+                        .build()
             )
         );
+
+        drive.odo.setPosition(new Pose2D(DistanceUnit.MM,0,0, AngleUnit.DEGREES, -90));
+        drive.pose = new Pose2d(0,0,Math.toRadians(-90));
+
+        Actions.runBlocking(new ParallelAction(
+                new SequentialAction(
+                        new SleepAction(0),
+                        new InstantAction(() -> extras.armVertical()),
+                        new InstantAction(() -> extras.elevatorHighChamber()),
+                        new SleepAction(2.1),
+                        new InstantAction(() -> extras.elevatorDown()),
+                        new SleepAction(0.15)
+                )
+        ));
 
         safeWaitSeconds(30);
 

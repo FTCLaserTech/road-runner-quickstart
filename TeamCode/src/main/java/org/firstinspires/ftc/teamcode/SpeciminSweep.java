@@ -56,29 +56,29 @@ public class SpeciminSweep extends LinearOpMode
         double initialRotation = 180;
         Pose2d initPose = new Pose2d(0,0,Math.toRadians(initialRotation));
         Pose2d toSubmursible = new Pose2d(29,10,Math.toRadians(180));
-        Pose2d backUpFromSubmursible = new Pose2d(20,-11,Math.toRadians(315));
+        Pose2d backUpFromSubmursible = new Pose2d(19,-11,Math.toRadians(315));
         Pose2d lineUpForSweep1 = new Pose2d(20,-14,Math.toRadians(-45));
-        Pose2d lineUpForSweep2 = new Pose2d(20,-25,Math.toRadians(-45));
-        Pose2d lineUpForSweep3 = new Pose2d(20,-36,Math.toRadians(-45));
-        Pose2d sweep3 = new Pose2d(4,-30,Math.toRadians(-90));
-        Pose2d lineUpForWallSlide = new Pose2d(0,-8,Math.toRadians(-265));
+        Pose2d lineUpForSweep2 = new Pose2d(20,-24,Math.toRadians(-45));
+        Pose2d lineUpForSweep3 = new Pose2d(20,-35,Math.toRadians(-45));
+        Pose2d sweep3 = new Pose2d(10,-28,Math.toRadians(-110));
+        Pose2d lineUpForWallSlide = new Pose2d(0,-8,Math.toRadians(-270));
         Pose2d wallSlide = new Pose2d(-5,-49,Math.toRadians(90));
         Pose2d lineUpForWallSlide2 = new Pose2d(0,-8,Math.toRadians(160));
         Pose2d wallSlide2 = new Pose2d(-5,-20,Math.toRadians(170));
-        Pose2d toSubmursible2 = new Pose2d(20,60,Math.toRadians(0));
-        Pose2d toSubmursible3 = new Pose2d(-67,34,Math.toRadians(270));
-        Pose2d toSubmursible4 = new Pose2d(-67,34,Math.toRadians(270));
-        Pose2d toSubmursible5 = new Pose2d(-67,34,Math.toRadians(270));
+        Pose2d toSubmursible2 = new Pose2d(29,60,Math.toRadians(180));
+        Pose2d toSubmursible3 = new Pose2d(29,59,Math.toRadians(270));
+        Pose2d toSubmursible4 = new Pose2d(29,58,Math.toRadians(270));
+        Pose2d toSubmursible5 = new Pose2d(29,57,Math.toRadians(270));
         Pose2d park = new Pose2d(-10,-2,Math.toRadians(275));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
         // hang pre-loaded sample in the high chamber
         Action DriveToNearSubmursibleAction = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(50.0))
+                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(55.0))
                 .build();
 
-        Action DriveToNearSubmursibleAction2 = drive.actionBuilder(new Pose2d(0,0,Math.toRadians(-90)))
+        Action DriveToNearSubmursibleAction2 = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(toSubmursible2.position, toSubmursible2.heading, new TranslationalVelConstraint(50.0))
                 // move to submersible
                 .build();
@@ -106,10 +106,10 @@ public class SpeciminSweep extends LinearOpMode
                         new SleepAction(0),
                         new InstantAction(() -> extras.armVertical()),
                         new InstantAction(() -> extras.elevatorHighChamber()),
-                        new SleepAction(1.5),
+                        new SleepAction(1.2),
                         new InstantAction(() -> extras.elevatorDown()),
                         new InstantAction(() -> extras.armExtend()),
-                        new SleepAction(0.3)
+                        new SleepAction(0.0)
                 )
         ));
 
@@ -140,11 +140,11 @@ public class SpeciminSweep extends LinearOpMode
         drive.pose = new Pose2d(0,0,Math.toRadians(-90));
 
         Actions.runBlocking(new ParallelAction(
+                DriveToNearSubmursibleAction2,
                 new SequentialAction(
                         new SleepAction(0),
-                        new InstantAction(() -> extras.armVertical()),
                         new InstantAction(() -> extras.elevatorHighChamber()),
-                        new SleepAction(2.1),
+                        new SleepAction(2.3),
                         new InstantAction(() -> extras.elevatorDown()),
                         new SleepAction(0.15)
                 )

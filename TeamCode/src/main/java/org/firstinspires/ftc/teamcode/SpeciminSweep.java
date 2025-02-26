@@ -75,7 +75,7 @@ public class SpeciminSweep extends LinearOpMode
 
         // hang pre-loaded sample in the high chamber
         Action DriveToNearSubmursibleAction = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(55.0))
+                .strafeToLinearHeading(toSubmursible.position, toSubmursible.heading, new TranslationalVelConstraint(50.0))
                 .build();
 
         Action DriveToNearSubmursibleAction2 = drive.actionBuilder(drive.pose)

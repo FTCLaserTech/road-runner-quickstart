@@ -49,10 +49,6 @@ public class SpecimensAutoPush3PinPoint extends LinearOpMode
         Pose2d wallSlide = new Pose2d(52,-5,Math.toRadians(180));
         Pose2d lineUpForWallSlide2 = new Pose2d(-10,-20,Math.toRadians(160));
         Pose2d wallSlide2 = new Pose2d(-1,-20,Math.toRadians(170));
-        //Pose2d lineUpForWallSlide3 = new Pose2d(-20,-9,Math.toRadians(180));
-        //Pose2d wallSlide3 = new Pose2d(2,-9,Math.toRadians(180));
-        //Pose2d lineUpForWallSlide4 = new Pose2d(-20,-9,Math.toRadians(180));
-        //Pose2d wallSlide4 = new Pose2d(2,-9,Math.toRadians(180));
         Pose2d toSubmursible2 = new Pose2d(-67,34,Math.toRadians(270));
         Pose2d toSubmursible3 = new Pose2d(-67,34,Math.toRadians(270));
         Pose2d toSubmursible4 = new Pose2d(-67,34,Math.toRadians(270));

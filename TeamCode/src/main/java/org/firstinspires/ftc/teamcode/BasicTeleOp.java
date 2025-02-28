@@ -106,6 +106,7 @@ public class BasicTeleOp extends LinearOpMode
 
 
         telemetry.addData("Previous Orientation: ", previousOrientation);
+        telemetry.addData("Odo Orientation: ", drive.odo.getHeading());
         telemetry.addData("Init Complete", initArmAtStart);
         telemetry.update();
 

@@ -30,8 +30,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import java.util.Arrays;
 
 @Config
-//@Disabled
 @Autonomous(group = "a")
+@Disabled
 
 public class SpeciminSweep extends LinearOpMode
 {

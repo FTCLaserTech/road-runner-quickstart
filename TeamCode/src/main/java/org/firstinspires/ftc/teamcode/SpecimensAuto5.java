@@ -232,14 +232,17 @@ public class SpecimensAuto5 extends LinearOpMode
                             new SleepAction(0),
                             new InstantAction(() -> extras.armExtend())
                     )
-            ));
+                    )
+            );
 
             // Save the ending location
-            extras.saveAutoStartRotation(drive.odo.getHeading() + Math.toRadians(initialRotation) - PI / 2);
+            //extras.saveAutoStartRotation(drive.odo.getHeading() + Math.toRadians(initialRotation) - PI / 2);
+            extras.saveAutoStartRotation(Math.toRadians(45) + Math.toRadians(initialRotation) - PI / 2);
         }
         catch (Exception e)
         {
-            double heading = drive.odo.getHeading() + Math.toRadians(initialRotation) - PI / 2;
+            //double heading = drive.odo.getHeading() + Math.toRadians(initialRotation) - PI / 2;
+            double heading = Math.toRadians(45) + Math.toRadians(initialRotation) - PI / 2;
             extras.saveAutoStartRotation(heading);
             telemetry.addData("heading", heading);
             telemetry.update();

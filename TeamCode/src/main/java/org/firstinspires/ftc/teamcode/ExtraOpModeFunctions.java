@@ -76,6 +76,9 @@ public class ExtraOpModeFunctions
     public enum Collect {IDLE, DUMP, WAIT, COLLECT}
     Collect dumpState = Collect.IDLE;
 
+    public enum Elevator {IDLE, HALF, WAIT, DOWN}
+    Elevator elevatorState = Elevator.IDLE;
+
     public enum SpecimenPickupStates {IDLE, PICKUP, WAIT, DROPTAIL}
     SpecimenPickupStates specimenPickupState = SpecimenPickupStates.IDLE;
 
@@ -181,7 +184,30 @@ public class ExtraOpModeFunctions
                 break;
         }
     }
-
+    /*
+    ElapsedTime elevatorStateTimer = new ElapsedTime(MILLISECONDS);
+    public void elevatorStateMachine() {
+        switch (elevatorState) {
+            case IDLE:
+                //do nothing
+                break;
+            case HALF:
+                elevatorHalf();
+                elevatorStateTimer.reset();
+                elevatorState = Collect.WAIT;
+                break;
+            case WAIT:
+                if (elevatorStateTimer.milliseconds() > 1000) {
+                    dumpState = Collect.COLLECT;
+                }
+                break;
+            case DOWN:
+                dumper.setPosition(-1.0);
+                dumpState = Collect.IDLE;
+                break;
+        }
+    }
+    */
     ElapsedTime specimenPickupStateTimer = new ElapsedTime(MILLISECONDS);
     public void specimenPickupStateMachine() {
         switch (specimenPickupState) {
@@ -384,6 +410,14 @@ public class ExtraOpModeFunctions
     public void elevatorHighChamber()
     {
         elevatorTarget = 1400;
+        elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        elevator.setTargetPosition(elevatorTarget);
+        elevator.setPower(1.0);
+        elevatorPosition = ElevatorPosition.HIGH_CHAMBER;
+    }
+    public void elevatorHalf()
+    {
+        elevatorTarget = 650;
         elevator.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         elevator.setTargetPosition(elevatorTarget);
         elevator.setPower(1.0);

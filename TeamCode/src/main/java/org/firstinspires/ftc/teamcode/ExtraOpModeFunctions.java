@@ -341,7 +341,7 @@ public class ExtraOpModeFunctions
     {
         armPosition = ArmPosition.RETRACT;
         //elevatorTarget = 177+35;
-        elevatorTarget = -1750;
+        elevatorTarget = -1819;
         arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(elevatorTarget);
         arm.setPower(1.0);

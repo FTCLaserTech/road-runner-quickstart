@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
-import static java.lang.Math.PI;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
@@ -24,7 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 @Autonomous(group = "a")
 
 
-public class SpecimensAuto5Hazmat extends LinearOpMode
+public class SpecimensAuto5Farther extends LinearOpMode
 {
     @Override
     public void runOpMode() throws InterruptedException

@@ -56,6 +56,7 @@ public class BasicTeleOp extends LinearOpMode
         boolean gp1_a_pressed = false;
         boolean gp2_x_pressed = false;
         boolean gp2_by_pressed = false;
+        boolean gp1_bx_pressed = false;
         boolean gp2_bx_pressed = false;
 
 
@@ -399,6 +400,15 @@ public class BasicTeleOp extends LinearOpMode
             }
 
             // Init Arm
+            if ((gamepad1.back) && (gamepad1.x))
+            {
+                gp1_bx_pressed = true;
+            }
+            else if (!gamepad1.x && gp1_bx_pressed)
+            {
+                extras.initArm();
+                gp1_bx_pressed = false;
+            }
             if ((gamepad2.back) && (gamepad2.x))
             {
                 gp2_bx_pressed = true;

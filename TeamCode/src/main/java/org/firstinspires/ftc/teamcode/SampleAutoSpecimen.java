@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(group = "a")
 //@Disabled
 
-public class HangandPark extends LinearOpMode
+public class SampleAutoSpecimen extends LinearOpMode
 {
     @Override
     public void runOpMode() throws InterruptedException

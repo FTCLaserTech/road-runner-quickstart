@@ -58,35 +58,15 @@ public class BasketAuto extends LinearOpMode
                 new TranslationalVelConstraint(20.0),
                 new AngularVelConstraint(Math.toRadians(100))));
 
-
-
-
         Pose2d nearPole = new Pose2d(-15,4, Math.toRadians(270));
-        Pose2d toPole = new Pose2d(-20.5,6, Math.toRadians(405));
         Action DriveToBasketPole = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(nearPole.position, nearPole.heading, baseVelConstraint)
-                .strafeToLinearHeading(toPole.position, toPole.heading, baseVelConstraint, new ProfileAccelConstraint(-40,40))
                 .build();
 
-        Actions.runBlocking(new ParallelAction(
+        Actions.runBlocking(new SequentialAction(
                 DriveToBasketPole,
-                new SequentialAction(
-                        new SleepAction(0),
-                        new InstantAction(() -> extras.armVertical()),
-                        new SleepAction(1.6),
-                        new InstantAction(() -> extras.elevatorHighBasket()),
-                        new SleepAction(1.8),
-                        new InstantAction(() -> extras.sampleDump()),
-                        new SleepAction(1.0),
-                        new InstantAction(() -> extras.samplePickup()),
-                        new SleepAction(0.5)
-                )
+                new InstantAction(() -> extras.armVertical())
         ));
-
-
-
-
-        //drive.updatePoseEstimate();
 
         // 1st sample: drive to and turn on intake
         Pose2d toFirstSample = new Pose2d(12,18, Math.toRadians(495));

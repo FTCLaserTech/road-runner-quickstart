@@ -25,7 +25,7 @@ import java.util.Arrays;
 @Config
 @Autonomous(group = "a")
 
-public class DumpandPark extends LinearOpMode
+public class SamplesAuto extends LinearOpMode
 {
     @Override
     public void runOpMode() throws InterruptedException
@@ -33,11 +33,23 @@ public class DumpandPark extends LinearOpMode
         double initialRotation = 270;
         Pose2d initPose = new Pose2d(0,0, Math.toRadians(initialRotation));
 
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
-        drive.PARAMS.headingGain = 7.0;
+
 
         extras.initArm();
+        extras.initElevator();
+        extras.tailUp();
+        extras.armRetract();
+
+        while (!gamepad2.dpad_left) {
+            sleep(100);
+            telemetry.addLine("Align robot to wall");
+            telemetry.addLine("GP2 DPad Left to exit");
+            telemetry.update();
+        }
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
+        drive.PARAMS.headingGain = 7.0;
+
 
         telemetry.addLine("Initialized");
         telemetry.addData("x", drive.pose.position.x);
@@ -60,8 +72,7 @@ public class DumpandPark extends LinearOpMode
 
 
 
-        Pose2d nearPole = new Pose2d(-15,9, Math.toRadians(400));
-        Pose2d toPole = new Pose2d(-19.5,6.5, Math.toRadians(400));
+        Pose2d nearPole = new Pose2d(-15,0, Math.toRadians(270));
         Pose2d backUpFromSubmursible = new Pose2d(5,26,Math.toRadians(270));
         Pose2d slideOver1 = new Pose2d(-10,53,Math.toRadians(270));
         Pose2d sweep = new Pose2d(-10,7,Math.toRadians(270));
@@ -86,28 +97,11 @@ public class DumpandPark extends LinearOpMode
         Actions.runBlocking(new ParallelAction(
                 DriveToBasketPole,
                 new SequentialAction(
-                        new SleepAction(0),
-                        new InstantAction(() -> extras.armVertical()),
-                        new SleepAction(1.6),
-                        new InstantAction(() -> extras.elevatorHighBasket()),
-                        new SleepAction(2.0)
+                        new SleepAction(0)
                 )
         ));
 
-        Action driveToBasketPole = drive.actionBuilder(drive.pose)
-                .strafeToLinearHeading(toPole.position, toPole.heading, baseVelConstraint, new ProfileAccelConstraint(-40,40))
-                .build();
 
-        Actions.runBlocking(new ParallelAction(
-                driveToBasketPole,
-                new SequentialAction(
-                        new SleepAction(1.8),
-                        new InstantAction(() -> extras.sampleDump()),
-                        new SleepAction(1.0),
-                        new InstantAction(() -> extras.samplePickup()),
-                        new SleepAction(0.5)
-                        )
-        ));
 
         Action awayFromPole = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(backUpFromSubmursible.position, backUpFromSubmursible.heading, new TranslationalVelConstraint(10.0))
@@ -116,8 +110,7 @@ public class DumpandPark extends LinearOpMode
         Actions.runBlocking(new ParallelAction(
                 awayFromPole,
                 new SequentialAction(
-                        new SleepAction(0.5),
-                        new InstantAction(() -> extras.elevatorDown())
+                        new SleepAction(0.0)
                 )
         ));
 

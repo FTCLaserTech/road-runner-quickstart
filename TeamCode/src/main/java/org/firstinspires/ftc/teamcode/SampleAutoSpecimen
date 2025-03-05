@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
-import static java.lang.Math.PI;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
@@ -14,13 +13,12 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
 @Autonomous(group = "a")
-@Disabled
+//@Disabled
 
 public class HangandPark extends LinearOpMode
 {
@@ -43,12 +41,32 @@ public class HangandPark extends LinearOpMode
         Pose2d park = new Pose2d(12,57,Math.toRadians(360));
 
 
-
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
 
+
         extras.initArm();
+        extras.initElevator();
         extras.tailUp();
+        extras.armRetract();
+
+        while (!gamepad2.dpad_left) {
+            sleep(100);
+            telemetry.addLine("Align robot to wall");
+            telemetry.addLine("GP2 DPad Left to exit");
+            telemetry.update();
+        }
+
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
+        drive.PARAMS.headingGain = 7.0;
+
+
+        telemetry.addLine("Initialized");
+        telemetry.addData("x", drive.pose.position.x);
+        telemetry.addData("y", drive.pose.position.y);
+        telemetry.addData("heading",Math.toDegrees(drive.pose.heading.toDouble()));
+        drive.odo.update();
+        telemetry.addData("ODO heading", drive.odo.getHeading());
+        telemetry.update();
 
         telemetry.addLine("Initialized");
         telemetry.addData("x", drive.pose.position.x);

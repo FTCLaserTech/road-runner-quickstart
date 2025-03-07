@@ -242,11 +242,11 @@ public class BasicTeleOp extends LinearOpMode
                 extras.armRetract();
             }
 
-            if(gamepad2.left_bumper && gamepad2.back) {
+            if(gamepad2.left_bumper) {
                 extras.liftRetractManual();
                 manualLiftStop = true;
             }
-            else if(gamepad2.left_trigger > 0 && gamepad2.back) {
+            else if(gamepad2.left_trigger > 0) {
                 extras.liftExtendManual();
                 manualLiftStop = true;
             }
@@ -343,12 +343,6 @@ public class BasicTeleOp extends LinearOpMode
 
             extras.elevatorMonitor();
 
-            if (gamepad2.a)
-            {
-                extras.elevatorDown();
-                extras.armHorizontal();
-                extras.tailUp();
-            }
 
             if (gamepad2.dpad_up)
             {
@@ -453,31 +447,30 @@ public class BasicTeleOp extends LinearOpMode
                 extras.tailDown();
             }
             */
-            if(gamepad2.y && !gamepad2.back)
+            if(gamepad2.a && !gamepad2.back)
             {
-                gp2_y_pressed = true;
+                extras.armBack();
             }
-            else if (!gamepad2.y && gp2_y_pressed) {
-                gp2_y_pressed = false;
-                if(extras.basketDeliveryState == ExtraOpModeFunctions.BasketDelivery.IDLE)
-                {
-                    extras.basketDeliveryState = ExtraOpModeFunctions.BasketDelivery.ARMUP;
-                }
+
+            if(gamepad2.b && !gamepad2.back)
+            {
+                extras.armPark();
             }
+
+
 
             extras.basketDeliveryStateMachine();
 
+            if ((!gamepad2.back) && (gamepad2.y))
+            {
+                extras.armVertical();
+            }
+
             if ((!gamepad2.back) && (gamepad2.x))
             {
-                gp2_x_pressed = true;
+                extras.armHang2();
             }
-            else if (!gamepad2.x && gp2_x_pressed) {
-                gp2_x_pressed = false;
-                if(extras.dumpState == ExtraOpModeFunctions.Collect.IDLE)
-                {
-                    extras.dumpState = ExtraOpModeFunctions.Collect.DUMP;
-                }
-            }
+
 
             extras.collectStateMachine();
 

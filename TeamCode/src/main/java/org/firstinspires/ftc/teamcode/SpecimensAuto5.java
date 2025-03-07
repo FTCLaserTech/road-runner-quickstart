@@ -261,7 +261,7 @@ public class SpecimensAuto5 extends LinearOpMode
             Actions.runBlocking(new ParallelAction(
                     parkAction,
                     new SequentialAction(
-                            new SleepAction(0.2),
+                            new SleepAction(0.4),
                             new InstantAction(() -> extras.elevatorDown()),
                             new InstantAction(() -> extras.armExtend())
                     )

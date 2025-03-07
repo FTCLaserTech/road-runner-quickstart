@@ -59,6 +59,8 @@ public class SpecimensAuto5 extends LinearOpMode
         ExtraOpModeFunctions extras = new ExtraOpModeFunctions(hardwareMap, this);
 
         extras.saveAutoStartRotation(Math.toRadians(45) + Math.toRadians(initialRotation));
+        boolean manualLiftStop = false;
+
 
 
         extras.initArm();
@@ -71,6 +73,23 @@ public class SpecimensAuto5 extends LinearOpMode
             telemetry.addLine("Align robot to wall");
             telemetry.addLine("GP2 DPad Left to exit");
             telemetry.update();
+
+            if(gamepad2.left_bumper) {
+                extras.liftRetractManual();
+                manualLiftStop = true;
+            }
+            else if(gamepad2.left_trigger > 0) {
+                extras.liftExtendManual();
+                manualLiftStop = true;
+            }
+            else
+            {
+                if(manualLiftStop == true)
+                {
+                    extras.liftStop();
+                    manualLiftStop = false;
+                }
+            }
         }
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);

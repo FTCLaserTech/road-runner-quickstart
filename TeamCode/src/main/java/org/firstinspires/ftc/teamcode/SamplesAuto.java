@@ -46,6 +46,8 @@ public class SamplesAuto extends LinearOpMode
             telemetry.addLine("Align robot to wall");
             telemetry.addLine("GP2 DPad Left to exit");
             telemetry.update();
+
+
         }
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
         drive.PARAMS.headingGain = 7.0;
